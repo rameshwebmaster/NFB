@@ -6,6 +6,9 @@
             width: 48px;
             height: 48px;
         }
+        a.active {
+            font-weight: bold;
+        }
     </style>
 @endsection
 
@@ -24,15 +27,15 @@
                 <h3 class="box-title m-b-20">Users list</h3>
                 <div class="row">
                     <div class="col-xs-6">
-                        <a href="?role=admin">Admin</a>
+                        <a {{ $role == 'admin' ? 'class=active':'' }} href="?role=admin">Admin</a>
                         <span> | </span>
-                        <a href="?role=doctor">Doctor</a>
+                        <a {{ $role == 'doctor' ? 'class=active':'' }} href="?role=doctor">Doctor</a>
                         <span> | </span>
-                        <a href="?role=content-manager">Content Manager</a>
+                        <a {{ $role == 'content-manager' ? 'class=active':'' }} href="?role=content-manager">Content Manager</a>
                         <span> | </span>
-                        <a href="?role=marketer">Marketer</a>
+                        <a {{ $role == 'marketer' ? 'class=active':'' }} href="?role=marketer">Marketer</a>
                         <span> | </span>
-                        <a href="?role=seller">Seller</a>
+                        <a {{ $role == 'seller' ? 'class=active':'' }} href="?role=seller">Seller</a>
                     </div>
                     <div class="col-xs-6">
                         <div class="pull-right">

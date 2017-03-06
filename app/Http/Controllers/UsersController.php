@@ -46,7 +46,7 @@ class UsersController extends Controller
             $query->search($search);
         }
         $users = $query->paginate(5);
-        return view('admin.users.panel.index', compact('users', 'userTemplate'));
+        return view('admin.users.panel.index', compact('users', 'userTemplate', 'role'));
     }
 
     public function listAppUsers(Request $request)
