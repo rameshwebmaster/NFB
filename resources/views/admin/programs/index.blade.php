@@ -34,9 +34,10 @@
                         </tr>
                         </thead>
                         <tbody>
+                        @php $i = ($programs->currentPage() - 1)* $programs->perPage()+1; @endphp
                         @foreach($programs as $program)
                             <tr>
-                                <td>{{ $program->id }}</td>
+                                <td>{{ $i }}</td>
                                 <td><a href="{{ '/programs/' . $program->id . '/edit' }}">{{ $program->title  }}</a>
                                 </td>
                                 <td>{{ studly_case($program->type)  }}</td>
@@ -49,8 +50,8 @@
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                     <a href="javascript:void(0);"
-                                       onclick="document.getElementById('{{ 'deleteProgram' . $program->id }}').submit()"
-                                       class="btn btn-sm btn-outline btn-danger">
+                                       data-form="{{ 'deleteProgram' . $program->id }}"
+                                       class="btn btn-sm btn-outline btn-danger btn-delete">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                     <form id="deleteProgram{{ $program->id }}"
@@ -60,6 +61,7 @@
                                     </form>
                                 </td>
                             </tr>
+                          @php $i++ @endphp  
                         @endforeach
                         </tbody>
                     </table>
