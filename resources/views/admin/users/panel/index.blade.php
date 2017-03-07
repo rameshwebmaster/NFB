@@ -86,8 +86,8 @@
                                     @endif
                                     <a href="{{ route('editUser', ['user' => $user->id]) }}"
                                        class="btn btn-sm btn-outline btn-primary"><i class="fa fa-pencil"></i></a>
-                                    <button type="button" class="btn btn-outline btn-danger btn-sm"
-                                            onclick="document.getElementById('{{ 'deleteUser' . $user->id }}').submit()">
+                                    <button type="button" class="btn btn-outline btn-danger btn-sm btn-delete"
+                                            data-form="{{ 'deleteUser' . $user->id }}">
                                         <i class="fa fa-trash"></i></button>
                                     <form class="hidden" action="{{ route('profile', ['user' => $user->id]) }}"
                                           method="post" id="{{ 'deleteUser' . $user->id }}">

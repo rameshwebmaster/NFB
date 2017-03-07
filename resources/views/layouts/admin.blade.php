@@ -37,6 +37,8 @@
 
     </div>
 
+    @include('partials._model')
+
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jasny-bootstrap.js"></script>
@@ -45,5 +47,6 @@
     @yield('scripts')
     <script src="/js/custom.min.js"></script>
     <script src="/js/wp-sidebar.js"></script>
+    <script src="/js/custom.js"></script>
 </body>
 </html>
