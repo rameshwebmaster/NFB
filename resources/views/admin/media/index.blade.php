@@ -49,7 +49,7 @@
                             @endif
 
                             <div class="actions" style="position:absolute; top: 5px; left: 15px;">
-                                <a href="javascript:void(0)" onclick="document.getElementById('deleteMedia{{ $media->id }}').submit()" class="btn btn-danger btn-sm"><i
+                                <a href="javascript:void(0)" data-form="deleteMedia{{ $media->id }}" class="btn btn-danger btn-sm btn-delete"><i
                                             class="fa fa-trash"></i></a>
                                 <form action="{{ route('deleteMedia', ['media' => $media->id]) }}" id="deleteMedia{{ $media->id }}" method="post">
                                     {{ csrf_field() }}
