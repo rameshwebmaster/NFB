@@ -68,9 +68,10 @@
                         </tr>
                         </thead>
                         <tbody>
+                        @php $i = ($users->currentPage() - 1)* $users->perPage()+1; @endphp
                         @foreach($users as $user)
                             <tr>
-                                <td>{{ $user->id }}</td>
+                                <td>{{ $i }}</td>
                                 <td><img class="img-circle user-avatar"
                                          src="/uploads/avatars/{{ (isset($user->avatar) && !empty($user->avatar)) ? $user->avatar : 'default.jpg' }}">
                                 </td>
@@ -95,6 +96,7 @@
                                     </form>
                                 </td>
                             </tr>
+                          @php $i++ @endphp  
                         @endforeach
                         </tbody>
                     </table>
