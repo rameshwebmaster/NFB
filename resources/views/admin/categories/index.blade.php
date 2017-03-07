@@ -35,17 +35,18 @@
                         </tr>
                         </thead>
                         <tbody>
+                        @php $i = ($cats->currentPage() - 1)* $cats->perPage()+1; @endphp
                         @foreach($cats as $cat)
                             <tr>
-                                <td>{{ $cat->id }}</td>
+                                <td>{{ $i }}</td>
                                 <td>{{ $cat->title  }}</td>
                                 <td>{{ str_limit($cat->description) }}</td>
                                 <td>
                                     <a href="{{ route('editCategory', ['categoryType' => $categoryType, 'category' => $cat->id]) }}"
                                        class="btn btn-sm btn-primary btn-outline"><i class="fa fa-pencil"></i></a>
                                     <a href="javascript:void(0);"
-                                       onclick="document.getElementById('{{ 'deleteCategory' . $cat->id }}').submit()"
-                                       class="btn btn-sm btn-outline btn-danger">
+                                       data-form="{{ 'deleteCategory' . $cat->id }}"
+                                       class="btn btn-sm btn-outline btn-danger btn-delete">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                     <form id="deleteCategory{{ $cat->id }}"
@@ -55,6 +56,7 @@
                                     </form>
                                 </td>
                             </tr>
+                        @php $i++ @endphp
                         @endforeach
                         </tbody>
                     </table>
