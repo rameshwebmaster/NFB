@@ -27,8 +27,8 @@ class CategoriesAPIController extends Controller
 //            dd($cat);
 //            $cat->addTranslationItem('category_title', $cat->trans('category_title') ?? "");
             //$cat->addTranslationItem('category_description', $cat->trans('category_description') ?? "");
-            $cat->addTranslationItem('category_title', isset($cat->trans('category_title')) ? $cat->trans('category_title') : "");
-            $cat->addTranslationItem('category_description', isset($cat->trans('category_description')) ? $cat->trans('category_description') : "");
+            $cat->addTranslationItem('category_title', ($cat->trans('category_title') !== null) ? $cat->trans('category_title') : "");
+            $cat->addTranslationItem('category_description', ($cat->trans('category_description') !== null) ? $cat->trans('category_description') : "");
         }
         return response()->json($cats);
     }

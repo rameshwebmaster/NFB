@@ -21,8 +21,8 @@ class ProgramsAPIController extends Controller
 
     public function getNutritionProgram(Request $request)
     {
-        $week = isset($request->get('week')) ? $request->get('week') : '1'; //$request->get('week') ?? '1';
-        $day = isset($request->get('day')) ? $request->get('day') : '1'; //$request->get('day') ?? '1';
+        $week = ($request->get('week') !== null) ? $request->get('week') : '1'; //$request->get('week') ?? '1';
+        $day = ($request->get('day') !== null) ? $request->get('day') : '1'; //$request->get('day') ?? '1';
 
         $user = JWTAuth::toUser();
 
@@ -50,10 +50,10 @@ class ProgramsAPIController extends Controller
         ])->first();
 
         $program->sections->each(function ($section) {
-            $section->addTranslationItem('program_section_title', isset($section->trans('section_title')) ? $section->trans('section_title') : ""); //$section->addTranslationItem('program_section_title', $section->trans('section_title') ?? "");
+            $section->addTranslationItem('program_section_title', ($section->trans('section_title') !== null) ? $section->trans('section_title') : ""); //$section->addTranslationItem('program_section_title', $section->trans('section_title') ?? "");
             $section->entries->each(function ($entry) {
-                $entry->addTranslationItem('program_entry_title', isset($entry->trans('program_entry_title')) ? $entry->trans('program_entry_title') : ""); //$entry->addTranslationItem('program_entry_title', $entry->trans('program_entry_title') ?? "");
-                $entry->addTranslationItem('program_entry_quantity', isset($entry->trans('program_entry_quantity')) ? $entry->trans('program_entry_quantity') : ""); //$entry->addTranslationItem('program_entry_quantity', $entry->trans('program_entry_quantity') ?? "");
+                $entry->addTranslationItem('program_entry_title', ($entry->trans('program_entry_title') !== null) ? $entry->trans('program_entry_title') : ""); //$entry->addTranslationItem('program_entry_title', $entry->trans('program_entry_title') ?? "");
+                $entry->addTranslationItem('program_entry_quantity', ($entry->trans('program_entry_quantity') !== null) ? $entry->trans('program_entry_quantity') : ""); //$entry->addTranslationItem('program_entry_quantity', $entry->trans('program_entry_quantity') ?? "");
             });
         });
 
@@ -66,8 +66,8 @@ class ProgramsAPIController extends Controller
         $exerciseLevel = $user->metaFor('user_exercise_level')->value;
         $category = Category::where('type', 'exercise_cat')->where('order', $exerciseLevel)->first();
         if ($category) {
-            $category->addTranslationItem('category_title', isset($category->trans('category_title')) ? $category->trans('category_title') : "");  //$category->addTranslationItem('category_title', $category->trans('category_title') ?? "");
-            $category->addTranslationItem('category_description', isset($category->trans('category_description')) ? $category->trans('category_description') : ""); //$category->addTranslationItem('category_description', $category->trans('category_description') ?? "");
+            $category->addTranslationItem('category_title', ($category->trans('category_title') !== null) ? $category->trans('category_title') : "");  //$category->addTranslationItem('category_title', $category->trans('category_title') ?? "");
+            $category->addTranslationItem('category_description', ($category->trans('category_description') !== null) ? $category->trans('category_description') : ""); //$category->addTranslationItem('category_description', $category->trans('category_description') ?? "");
             return $category;
         }
         return response()->json(['error' => 'exercise_plan_not_found'], 404);

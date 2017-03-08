@@ -35,7 +35,7 @@ class PostsController extends Controller
 
     public function index(Request $request)
     {
-        $status = isset($request->get('status')) ? $request->get('status') : 'publish'; //$request->get('status') ?? 'publish';
+        $status = ($request->get('status') !== null) ? $request->get('status') : 'publish'; //$request->get('status') ?? 'publish';
         if (!in_array($status, ['publish', 'pending'])) {
             $status = 'publish';
         }
