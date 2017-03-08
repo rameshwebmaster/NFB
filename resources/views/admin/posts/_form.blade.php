@@ -114,6 +114,14 @@
                                        value="{{ $post->getMeta('address') ?? old('address') }}">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="website">Website:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="website" id="website"
+                                       placeholder="Enter Website"
+                                       value="{{ $post->getMeta('website') ?? old('website') }}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -225,8 +233,8 @@
                         <select name="country" id="country" class="form-control">
                             @foreach($countries as $key => $country)
                                 <option value="{{ $key }}"
-                                @if(isset($metas['country']))
-                                    {{ $metas['country']->meta_value == $key ? 'selected' : '' }}
+                                @if($post->getMeta('country'))
+                                    {{ $post->getMeta('country') == $key ? 'selected' : '' }}
                                         @endif
                                 >{{ $country }}</option>
                             @endforeach

@@ -7,15 +7,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>NFBox Admin</title>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
-    <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
 
-    <link rel="stylesheet" href="/css/sidebar-nav.min.css">
+    <link rel="stylesheet" href="{{ asset('css/sidebar-nav.min.css') }}">
 
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-    <link rel="stylesheet" href="/css/blue-dark.css">
+    <link rel="stylesheet" href="{{ asset('css/blue-dark.css') }}">
 
     @yield('styles')
 </head>
@@ -40,14 +40,14 @@
 
     @include('partials._model')
 
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jasny-bootstrap.js"></script>
-    <script src="/js/jquery.slimscroll.js"></script>
-    <script src="/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
     @yield('scripts')
-    <script src="/js/custom.min.js"></script>
-    <script src="/js/wp-sidebar.js"></script>
-    <script src="/js/custom.js"></script>
+    <script src="{{ asset('js/custom.min.js') }}"></script>
+    <script src="{{ asset('js/wp-sidebar.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 </html>

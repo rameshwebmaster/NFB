@@ -64,13 +64,14 @@ class PostsController extends Controller
             'categories' => $categories,
             'postType' => $this->postType,
             'isEdit' => false,
+            'post' => new Post
         ]);
     }
 
     public function store(Request $request)
     {
 
-        $availableMetas = ['instagram_id', 'country', 'phone_number', 'address'];
+        $availableMetas = ['instagram_id', 'country', 'phone_number', 'address', 'website'];
 
         $this->validate($request, [
             'title' => 'required',
@@ -138,7 +139,7 @@ class PostsController extends Controller
     public function update($post_type, Post $post, Request $request)
     {
 
-        $availableMetas = ['instagram_id', 'country', 'phone_number', 'address'];
+        $availableMetas = ['instagram_id', 'country', 'phone_number', 'address', 'website'];
 
         $this->validate($request, [
             'title' => 'required',

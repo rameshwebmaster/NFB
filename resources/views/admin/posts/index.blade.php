@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="white-box">
-                <h3 class="box-title m-b-15">Advice list</h3>
+                <h3 class="box-title m-b-15">{{ $postType }} list</h3>
                 <div class="row m-b-15">
                     <div class="col-sm-6">
                         <a href="{{ route('posts', ['postType' => $postType]) }}">published</a>
@@ -63,6 +63,10 @@
                                     </div>
                                 </th>
                                 <th>Title</th>
+                                @if($postType == 'companies')
+                                <th>Address</th>
+                                <th>Website</th>
+                                @endif
                                 <th>Excerpt</th>
                                 <th>Author</th>
                                 <th>Date</th>
@@ -82,6 +86,16 @@
                                         </div>
                                     </td>
                                     <td>{{ $post->title }}</td>
+                                    @if($postType == 'companies')
+                                    <td>{{ $post->getMeta('address') }}</td>
+                                    <td>
+                                        @if(!empty($post->getMeta('website')))
+                                        <a href="http://{{ $post->getMeta('website') }}" target="_blank">
+                                        {{ $post->getMeta('website') }}
+                                        </a>
+                                        @endif
+                                    </td>
+                                    @endif
                                     <td>{{ str_limit($post->excerpt, 50)  }}</td>
                                     <td>
                                         <a href="{{ route('profile', ['user' => $post->writer->id]) }}">{{ $post->writer->username }}</a>
