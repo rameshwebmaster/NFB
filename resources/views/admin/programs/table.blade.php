@@ -221,7 +221,7 @@
 @endsection
 
 @section('styles')
-<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<link href="/css/bootstrap-editable.css" rel="stylesheet"/>
 <style type="text/css">
         a.btn-delete {
         color: #fb9678;
@@ -230,7 +230,7 @@
 @endsection
 
 @section('scripts')
-    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="/js/bootstrap-editable.min.js"></script>
     <script>
         $(document).ready(function() {
             
