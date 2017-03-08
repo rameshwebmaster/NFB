@@ -57,7 +57,7 @@ class UsersAPIController extends Controller
     {
         $user = JWTAuth::toUser();
         $metas = $user->metas->keyBy('key');
-        $avatar = $user->avatar ?? 'default.jpg';
+        $avatar = isset($user->avatar) ? $user->avatar : 'default.jpg'; //$user->avatar ?? 'default.jpg';
         $data = [
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
@@ -183,8 +183,8 @@ class UsersAPIController extends Controller
         $messages->each(function ($message) {
             $message->read = $message->pivot->read;
             $message->sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $message->pivot->sent_at)->format('d M Y');
-            $message->addTranslationItem('message_subject', $message->trans('message_subject') ?? "");
-            $message->addTranslationItem('message_body', $message->trans('message_body') ?? "");
+            $message->addTranslationItem('message_subject', isset($message->trans('message_subject')) ? $message->trans('message_subject') : ""); //$message->addTranslationItem('message_subject', $message->trans('message_subject') ?? "");
+            $message->addTranslationItem('message_body', isset($message->trans('message_body')) ? $message->trans('message_body') : ""); //$message->addTranslationItem('message_body', $message->trans('message_body') ?? "");
         });
         return response()->json($messages);
     }
@@ -196,8 +196,8 @@ class UsersAPIController extends Controller
         $message = $user->messages()->where('messages.id', $message)->withPivot('sent_at', 'read')->first();
         $message->read = $message->pivot->read;
         $message->sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $message->pivot->sent_at)->format('d M Y');
-        $message->addTranslationItem('message_subject', $message->trans('message_subject') ?? "");
-        $message->addTranslationItem('message_body', $message->trans('message_body') ?? "");
+        $message->addTranslationItem('message_subject', isset($message->trans('message_subject')) ? $message->trans('message_subject') : ""); //$message->addTranslationItem('message_subject', $message->trans('message_subject') ?? "");
+        $message->addTranslationItem('message_body', isset($message->trans('message_body')) ? $message->trans('message_body') : ""); //$message->addTranslationItem('message_body', $message->trans('message_body') ?? "");
         return $message;
     }
 

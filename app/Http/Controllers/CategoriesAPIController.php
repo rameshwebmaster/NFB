@@ -25,8 +25,10 @@ class CategoriesAPIController extends Controller
         $cats = Category::where('type', $this->categoryType)->orderBy('order', 'desc')->get(['id', 'title', 'type', 'description']);
         foreach($cats as $cat) {
 //            dd($cat);
-            $cat->addTranslationItem('category_title', $cat->trans('category_title') ?? "");
-            $cat->addTranslationItem('category_description', $cat->trans('category_description') ?? "");
+//            $cat->addTranslationItem('category_title', $cat->trans('category_title') ?? "");
+            //$cat->addTranslationItem('category_description', $cat->trans('category_description') ?? "");
+            $cat->addTranslationItem('category_title', isset($cat->trans('category_title')) ? $cat->trans('category_title') : "");
+            $cat->addTranslationItem('category_description', isset($cat->trans('category_description')) ? $cat->trans('category_description') : "");
         }
         return response()->json($cats);
     }

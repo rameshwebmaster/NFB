@@ -3,8 +3,8 @@
     <div class="wp-sidebar-nav">
         <div class="user-profile">
             <div class="dropdown user-pro-body">
-                <div><img src="/uploads/avatars/{{ $currentUser->avatar ?? 'default.jpg'}}" alt="user-img"
-                          class="img-circle"></div>
+                <div><img src="/uploads/avatars/{{ isset($currentUser->avatar) ? $currentUser->avatar : 'default.jpg'}}" alt="user-img"
+                          class="img-circle"></div> <?php //{{ $currentUser->avatar ?? 'default.jpg'}} ?>
                 <a href="javascript:void(0)" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button"
                    aria-haspopup="true"
                    aria-expanded="false">{{ $currentUser->first_name }} {{ $currentUser->last_name }}<span

@@ -92,7 +92,7 @@ class ProgramsController extends Controller
 
     public function table($program, Request $request)
     {
-        $week = $request->get('w') ?? '1';
+        $week = isset($request->get('w')) ? $request->get('w') : '1'; //$request->get('w') ?? '1';
         $program = Program::where('id', $program)->with(['sections' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }, 'sections.entries' => function ($query) use ($week) {

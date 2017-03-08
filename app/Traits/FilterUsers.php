@@ -11,13 +11,13 @@ trait FilterUsers
 
     public function filterUsers($query, Request $request)
     {
-        $country = $request->get('country') ?? null;
-        $age_from = $request->get('age_from') ?? null;
-        $age_to = $request->get('age_to') ?? null;
-        $gender = $request->get('gender') ?? null;
-        $bloodType = $request->get('blood_type') ?? null;
-        $diseases = $request->get('disease') ?? null;
-        $accountType = $request->get('type') ?? null;
+        $country = isset($request->get('country')) ? $request->get('country') : null; //$request->get('country') ?? null;
+        $age_from = isset($request->get('age_from')) ? $request->get('age_from') : null; //$request->get('age_from') ?? null;
+        $age_to = isset($request->get('age_to')) ? $request->get('age_to') : null; //$request->get('age_to') ?? null;
+        $gender = isset($request->get('gender')) ? $request->get('gender') : null; //$request->get('gender') ?? null; 
+        $bloodType = isset($request->get('blood_type')) ? $request->get('blood_type') : null; //$request->get('blood_type') ?? null;
+        $diseases = isset($request->get('disease')) ? $request->get('disease') : null; //$request->get('disease') ?? null;
+        $accountType = isset($request->get('type')) ? $request->get('type') : null; //$request->get('type') ?? null;
         $to = Carbon::now();
         $from = Carbon::now();
         $query->when($country, function ($query) use ($country) {

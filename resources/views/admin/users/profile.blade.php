@@ -24,8 +24,8 @@
                     <img src="/images/profile-bg.jpg" width="100%" alt="profile background">
                     <div class="overlay-box">
                         <div class="user-content">
-                            <a href="javascript:void(0)"><img src="/uploads/avatars/{{ $user->avatar ?? 'default.jpg'}}"
-                                                              class="thumb-lg img-circle" alt=""></a>
+                            <a href="javascript:void(0)"><img src="/uploads/avatars/{{ isset($user->avatar) ? $user->avatar : 'default.jpg' }}"
+                                                              class="thumb-lg img-circle" alt=""></a> <?php //{{ $user->avatar ?? 'default.jpg'}} ?>
                             <h4 class="text-white">{{ '@' }}{{ $user->username }}</h4>
                         </div>
                     </div>

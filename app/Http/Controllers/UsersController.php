@@ -36,8 +36,8 @@ class UsersController extends Controller
     public function listPanelUsers(Request $request)
     {
         $userTemplate = 'panel';
-        $role = $request->get('role') ?? 'admin';
-        $search = $request->get('search') ?? null;
+        $role = isset($request->get('role')) ? $request->get('role') : 'admin'; //$request->get('role') ?? 'admin';
+        $search = isset($request->get('search')) ? $request->get('search') : null; //$request->get('search') ?? null;
         $query = User::orderBy('created_at', 'desc');
         if ($role) {
             $query->ofRole($role);
@@ -152,7 +152,7 @@ class UsersController extends Controller
             }
             $avatar = $request->file('avatar');
             $avatar_name = $this->saveAvatar($avatar);
-            $data['avatar'] = $avatar_name ?? '';
+            $data['avatar'] = isset($avatar_name) ? $avatar_name : ''; //
         }
 
         if ($request->has('password') && !empty($request->get('password'))) {
@@ -231,7 +231,7 @@ class UsersController extends Controller
 
     public function healthStatus(User $user, Request $request)
     {
-        $measure = $request->get('measure') ?? 'weight';
+        $measure = isset($request->get('measure')) ? $request->get('measure') : 'weight'; //$request->get('measure') ?? 'weight';
         $healthStatuses = $user->healthStatuses()
             ->select($measure, 'created_at')
             ->oldest()

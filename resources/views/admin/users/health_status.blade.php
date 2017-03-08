@@ -26,7 +26,7 @@
                 <h3 class="box-title b-m-20">Health Charts</h3>
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button">
-                        {{ studly_case(request()->get('measure') ?? 'weight') }}
+                        {{ studly_case(isset(request()->get('measure')) ? request()->get('measure') : 'weight') }} <?php //{{ studly_case(request()->get('measure') ?? 'weight') }} ?>
                         <i class="fa fa-angle-down"></i>
                     </button>
                     <ul class="dropdown-menu" role="menu">

@@ -32,7 +32,7 @@ class PostsAPIController extends Controller
 
     public function index($post_type, Request $request)
     {
-        $cat = $request->get('cat') ?? null;
+        $cat = isset($request->get('cat')) ? $request->get('cat') : null; //$request->get('cat') ?? null;  
         if ($cat) {
             $category = Category::where('id', $cat)->first();
         }
@@ -70,7 +70,7 @@ class PostsAPIController extends Controller
         } else {
             $query->latest();
         }
-        $country = $request->get('country') ?? null;
+        $country = isset($request->get('country')) ? $request->get('country') : null; //$request->get('country') ?? null;
         if ($this->userType == 'free') {
             $query->where('access', 'free');
         }
@@ -103,7 +103,7 @@ class PostsAPIController extends Controller
     {
         $categories = $post->categories;
         $categories->each(function ($category) {
-            $category->addTranslationItem('category_title', $category->trans('category_title') ?? "");
+            $category->addTranslationItem('category_title', isset($category->trans('category_title')) ? $category->trans('category_title') : ""); //$category->addTranslationItem('category_title', $category->trans('category_title') ?? "");
 //            $categoryTranslations = $category->translations;
 //            $categoryTitle = $categoryTranslations->filter(function ($translation) {
 //                return $translation->translation_key == 'category_title';
@@ -115,9 +115,9 @@ class PostsAPIController extends Controller
         });
 
 
-        $post->addTranslationItem('post_title', $post->trans('post_title') ?? "");
-        $post->addTranslationItem('post_body', $post->trans('post_body') ?? "");
-        $post->addTranslationItem('post_excerpt', $post->trans('post_excerpt') ?? "");
+        $post->addTranslationItem('post_title', isset($post->trans('post_title')) ? $post->trans('post_title') : ""); //$post->addTranslationItem('post_title', $post->trans('post_title') ?? "");
+        $post->addTranslationItem('post_body', isset($post->trans('post_body')) ? $post->trans('post_body') : ""); //$post->addTranslationItem('post_body', $post->trans('post_body') ?? "");
+        $post->addTranslationItem('post_excerpt', isset($post->trans('post_excerpt')) ? $post->trans('post_excerpt') : ""); //$post->addTranslationItem('post_excerpt', $post->trans('post_excerpt') ?? "");
 
         $main = $post->mainAttachment;
         if (!$main->isEmpty()) {

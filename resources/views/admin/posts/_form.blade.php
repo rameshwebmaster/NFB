@@ -95,7 +95,7 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="instagram_id" id="instagram_id"
                                        placeholder="Enter Instagram ID"
-                                       value="{{ $post->getMeta('instagram_id') ?? old('instagram_id') }}">
+                                       value="{{ isset($post->getMeta('instagram_id')) ? $post->getMeta('instagram_id') : old('instagram_id') }}">  <?php //{{ $post->getMeta('instagram_id') ?? old('instagram_id') }} ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -103,7 +103,7 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="phone_number" id="phone_number"
                                        placeholder="Enter Phone Number"
-                                       value="{{ $post->getMeta('phone_number') ?? old('phone_number') }}">
+                                       value="{{ isset($post->getMeta('phone_number')) ? $post->getMeta('phone_number') : old('phone_number') }}"> <?php //{{ $post->getMeta('phone_number') ?? old('phone_number') }} ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -111,7 +111,7 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="address" id="address"
                                        placeholder="Enter Address"
-                                       value="{{ $post->getMeta('address') ?? old('address') }}">
+                                       value="{{ isset($post->getMeta('address')) ? $post->getMeta('address') : old('address') }}"> <?php //$post->getMeta('address') ?? old('address') ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -119,7 +119,7 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="website" id="website"
                                        placeholder="Enter Website"
-                                       value="{{ $post->getMeta('website') ?? old('website') }}">
+                                       value="{{ isset($post->getMeta('website')) ? $post->getMeta('website') : old('website') }}"> <?php //{{ $post->getMeta('website') ?? old('website') }} ?>
                             </div>
                         </div>
                     </div>
