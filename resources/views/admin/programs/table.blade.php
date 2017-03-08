@@ -65,9 +65,21 @@
                                     <td>
                                         @foreach($section->entries as $entry)
                                             @if($entry->day == $day)
-                                                <p>{{ $entry->title }}</p>
+                                                <p><a id="editable-{{ $entry->id }}" href="javascript:void(0);" class="editable" data-type="text" data-name="editable-{{ $entry->id }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="{{ $entry->id }}" data-title="Enter meal">{{ $entry->title }}</a>
+                                                <a href="javascript:void(0);" title="Delete" 
+                                                   data-form="{{ 'deleteProgramEntry' . $entry->id }}"
+                                                   class="btn-delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                                </p>
+                                                <form id="deleteProgramEntry{{ $entry->id }}"
+                                                      action="{{ route('deleteProgramEntry', ['entry' => $entry->id]) }}" method="post">
+                                                    {{ csrf_field() }}
+                                                    {{ method_field('delete') }}
+                                                </form>
                                             @endif
                                         @endforeach
+                                        <p><a id="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="" data-title="Enter title"></a></p>
                                     </td>
                                 @endforeach
                             </tr>
@@ -208,10 +220,41 @@
 
 @endsection
 
+@section('styles')
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<style type="text/css">
+        a.btn-delete {
+        color: #fb9678;
+    }
+</style>
+@endsection
 
 @section('scripts')
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script>
+        $(document).ready(function() {
+            
+            $('.editable').each(function(){
+                var editable = $(this);
+                editable.editable({
+                        emptytext : 'Click to Add Meal',
+                        url: '{{url("nfb-admin/programs")}}'+'/{{$program->id."/entry"}}',
+                        params: { _token: $('meta[name="csrf-token"]').attr('content'),section: editable.data('section'), week: editable.data('week'),day: editable.data('day'),title: editable.val(), quantity: 1},
+                        success : function(response) {
+                            var response= response;   
+                            if(response.success) {          
+                                if(response.value != "" && response.value != null)
+                                {       
+                                    $('#editable-'+response.id).html(response.value);
+                                }
+                            }else{          
+                                alert(response.msg);
+                            } 
+                        }  
+                });
+            });
+        });
+
         var tableBody = $('.table-body');
         //        $('#section-form').submit(function (event) {
         //            event.preventDefault();

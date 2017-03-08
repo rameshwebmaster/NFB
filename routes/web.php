@@ -108,6 +108,7 @@ Route::group(['prefix' => 'nfb-admin'], function () {
 
     Route::post('/programs/{program}/section', 'ProgramSectionsController@store')->name('createProgramSection');
     Route::post('/programs/{program}/entry', 'ProgramEntriesController@store')->name('createProgramEntry');
+    Route::delete('/programentries/{entry}', 'ProgramEntriesController@delete')->name('deleteProgramEntry');
 
 
     Route::get('/programs/sections', 'ProgramSectionsController@index');

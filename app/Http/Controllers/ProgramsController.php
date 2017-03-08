@@ -99,7 +99,7 @@ class ProgramsController extends Controller
             $query->where('week', $week);
         }])->first();
         //$program->sections()->orderBy('created_at', 'desc')->with('entries')->get();
-        return view('admin.programs.table', compact('program'));
+        return view('admin.programs.table', compact('program', 'week'));
     }
 
     private function createSection(Program $program, $sectionTitle, $arabicSectionTitle)
