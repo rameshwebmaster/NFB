@@ -17,6 +17,8 @@ use Log;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+use Validator;
+
 class UsersAPIController extends Controller
 {
 
@@ -213,8 +215,22 @@ class UsersAPIController extends Controller
         return response()->json(['success' => 'password_changed_successfully']);
     }
 
-    public function register(ApiRegisterRequest $request)
+    public function register(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|unique:users,username',
+            'email' => 'required|unique:users,email',
+            'gender' => 'required|in:1,2',
+            'blood_type' => 'required',
+            'language' => 'required',
+        ]);
+
+        //Check whether validation is failed or passed
+        if($validator->fails()){
+            //Redirect back with validation errors
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
         $data = $request->except(['avatar']);
         if ($request->hasFile('avatar')) {
             $data['avatar'] = $this->saveAvatar($request->file('avatar'));
