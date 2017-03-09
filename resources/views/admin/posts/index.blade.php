@@ -9,6 +9,14 @@
 @endsection
 
 @section('content')
+    
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-sm-12">
             <div class="white-box">
@@ -104,6 +112,18 @@
                                     <td class="actions">
                                         <a href="{{ route('editPost', ['postType' => $postType, 'post' => $post->id]) }}"
                                            class="btn btn-outline btn-primary"><i class="fa fa-pencil"></i></a>
+                                        
+                                        <!-- Change Status -->
+                                        @if($currentUser->isAdmin)
+                                            @if($status == 'publish')
+                                                <a href="{{ route('statusPost', ['postType' => $postType, 'post' => $post->id]) }}"
+                                           class="btn btn-outline btn-warning"><i class="fa fa-lock"></i>
+                                           </a>
+                                            @elseif($status == 'pending')
+                                                <a href="{{ route('statusPost', ['postType' => $postType, 'post' => $post->id]) }}"
+                                           class="btn btn-outline btn-info"><i class="fa fa-globe"></i></a>
+                                            @endif
+                                        @endif
                                         <button type="button" class="deleteButton btn btn-outline btn-danger"
                                                 data-toggle="modal"
                                                 data-target="#delete-modal"

@@ -151,6 +151,7 @@ Route::group(['prefix' => 'nfb-admin'], function () {
     Route::get('/{postType}/{post}/translation', 'PostsController@translationForm')->where('postType', '(recipes|exercises|advices|companies)')->name('translatePost');
     Route::post('/{postType}/{post}/translation', 'PostsController@storeTranslation')->where('postType', '(recipes|exercises|advices|companies)');
     Route::post('/posts/batch', 'PostsController@performBatchAction')->name('batchAction');
+    Route::get('/{postType}/{post}/status', 'PostsController@status')->where('postType', '(recipes|exercises|advices|companies)')->name('statusPost');
 
     Route::get('info', function () {
         phpinfo();

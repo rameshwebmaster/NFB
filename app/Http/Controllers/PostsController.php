@@ -39,7 +39,7 @@ class PostsController extends Controller
         if (!in_array($status, ['publish', 'pending'])) {
             $status = 'publish';
         }
-        $pendingCount = Post::where('status', 'pending')->count();
+        $pendingCount = Post::where('status', 'pending')->where('type', str_singular($this->postType))->count();
         $query = Post::where('type', str_singular($this->postType))->latest()->where('status', $status);
         //$query->with('mainAttachment.medium', 'categories');
         $posts = $query->paginate(20);
@@ -256,5 +256,18 @@ class PostsController extends Controller
         }
 
         return back();
+    }
+
+    public function status($pt, Post $post)
+    {
+
+        if ($post->status == 'publish')
+            $post->update(['status' => 'pending']);
+        elseif ($post->status == 'pending')
+            $post->update(['status' => 'publish']);
+
+        $post->save();
+
+        return back()->with('success', ucfirst(str_singular($pt)).' updated successfully.');
     }
 }
