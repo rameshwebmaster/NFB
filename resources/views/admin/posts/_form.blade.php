@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-8">
-
+            
         <div class="white-box">
             <h3 class="box-title m-b-0">English Details</h3>
             <p class="text-muted m-b-20">Enter required details in English</p>
@@ -60,6 +60,7 @@
                 @endif
             </div>
             {{--End of Title Field--}}
+
 
 
             @if($postType != 'companies')
@@ -223,6 +224,7 @@
         </div>
 
 
+
         @if($postType == 'companies')
             <div class="white-box">
                 <h3 class="box-title m-b-0">Country</h3>
@@ -251,17 +253,21 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="row">
-                        <div class="col-sm-6 col-xs-12 col-sm-offset-3">
+                        <div class="col-sm-6 col-xs-12 col-sm-offset-3">                             
+
                             <img class="img-responsive img thumb-image img-thumbnail"
+                            @if(isset($isEdit))
                             @if($isEdit)
-                                {{--                                         {{ dd($post->mainAttachment->isEmpty()) }}--}}
-                                        {{ 'src=' . ($post->mainAttachment->isEmpty() ? '' :  '/uploads/' . $post->mainAttachment[0]->squareSmall->path) }}
-                                    @endif>
+                                        
+                                        {{ 'src=' . ($post->mainAttachment->isEmpty() ? '' :  '/uploads/' . isset($post->mainAttachment[0]->squareSmall->path) ? $post->mainAttachment[0]->squareSmall->path : '' ) }}
+                                    @endif @endif>
                         </div>
                     </div>
+
                     <button type="button" class="btn btn-info btn-block m-t-5" id="attachment-dialog-trigger">Choose
                     </button>
-                    <input type="hidden" name="attachment" value="{{ $post->mainAttachment[0]->id or '' }}"
+                    
+                    <input type="hidden" name="attachment" value="{{ isset($post->mainAttachment[0]) ? $post->mainAttachment[0]->id : '' }}"
                            id="attachment">
                     <input type="hidden" name="attachment_type" id="attachment_type" value="thumbnail">
                 </div>
