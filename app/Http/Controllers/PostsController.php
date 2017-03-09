@@ -266,8 +266,6 @@ class PostsController extends Controller
         elseif ($post->status == 'pending')
             $post->update(['status' => 'publish']);
 
-        $post->save();
-
         return back()->with('success', ucfirst(str_singular($pt)).' updated successfully.');
     }
 }
