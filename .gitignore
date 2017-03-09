@@ -6,6 +6,8 @@
 Homestead.json
 Homestead.yaml
 .env
+.env-dev
+.htaccess
 /public/uploads
 /public/live
 /public/playlists
