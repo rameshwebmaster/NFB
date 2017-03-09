@@ -221,7 +221,7 @@
 @endsection
 
 @section('styles')
-<link href="/css/bootstrap-editable.css" rel="stylesheet"/>
+<link href="{{ asset('css/bootstrap-editable.css') }}" rel="stylesheet"/>
 <style type="text/css">
         a.btn-delete {
         color: #fb9678;
@@ -230,7 +230,7 @@
 @endsection
 
 @section('scripts')
-    <script src="/js/bootstrap-editable.min.js"></script>
+    <script src="{{ asset('js/bootstrap-editable.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             
@@ -241,8 +241,8 @@
                         url: '{{url("nfb-admin/programs")}}'+'/{{$program->id."/entry"}}',
                         params: { _token: $('meta[name="csrf-token"]').attr('content'),section: editable.data('section'), week: editable.data('week'),day: editable.data('day'),title: editable.val(), quantity: 1},
                         success : function(response) {
-                            var response= response;   
-                            if(response.success) {          
+                            var response= JSON.parse(response);   
+                            if(response.success == true) {          
                                 if(response.value != "" && response.value != null)
                                 {       
                                     $('#editable-'+response.id).html(response.value);
