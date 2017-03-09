@@ -250,6 +250,13 @@
                             }else{          
                                 alert(response.msg);
                             } 
+                        },
+                        error : function(response) {
+                            if (response.status === 422) {
+                                var responseText = JSON.parse(response.responseText);
+                                return responseText.title;
+                            }
+
                         }  
                 });
             });
