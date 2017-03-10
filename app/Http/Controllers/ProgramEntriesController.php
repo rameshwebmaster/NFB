@@ -46,14 +46,20 @@ class ProgramEntriesController extends Controller
         }
 
         if ($request->ajax()) {
+            $count = ProgramEntry::where([
+                    ['section_id','=',$entry->section_id],
+                    ['week','=',$entry->week],
+                    ['day','=',$entry->day],
+                    ])->count();
+
             header('Content-type:application/json');
             if (isset($data['id']) && !empty($data['id'])) {
                 $id = $entry->id ;
             } else {
-                $id = $entry->section_id.'-'.$entry->week.'-'.$entry->day;
+                $id = $entry->section_id.'-'.$entry->week.'-'.$entry->day.'-'.($count-1);
             } 
             
-            return json_encode(array('success' => true, 'id' => $id, 'value' => $entry->title));
+            return json_encode(array('success' => true, 'id' => $id, 'value' => $entry->title, 'count' => $count, 'entry' => $entry));
         }    
         else
             return redirect()->route('programTable', ['program' => $program->id])->with('success', 'Entry Created Successfully');

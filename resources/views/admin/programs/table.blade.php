@@ -62,6 +62,7 @@
                             <tr>
                                 <td>{{ $section->title }}</td>
                                 @foreach(['1', '2', '3', '4', '5', '6', '7'] as $day)
+                                @php $count = 0 @endphp
                                     <td>
                                         @foreach($section->entries as $entry)
                                             @if($entry->day == $day)
@@ -77,9 +78,10 @@
                                                     {{ csrf_field() }}
                                                     {{ method_field('delete') }}
                                                 </form>
+                                                @php $count++ @endphp
                                             @endif
                                         @endforeach
-                                        <p><a id="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="" data-title="Enter title"></a></p>
+                                        <p><a id="editable-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="" data-title="Enter title"></a></p>
                                     </td>
                                 @endforeach
                             </tr>
@@ -234,18 +236,20 @@
     <script>
         $(document).ready(function() {
             
-            $('.editable').each(function(){
-                var editable = $(this);
+            function addEditable(editable) {
+
                 editable.editable({
                         emptytext : 'Click to Add Meal',
                         url: '{{url("nfb-admin/programs")}}'+'/{{$program->id."/entry"}}',
                         params: { _token: $('meta[name="csrf-token"]').attr('content'),section: editable.data('section'), week: editable.data('week'),day: editable.data('day'),title: editable.val(), quantity: 1},
                         success : function(response) {
-                            var response= JSON.parse(response);   
+                            // var response= JSON.parse(response);   
                             if(response.success == true) {          
                                 if(response.value != "" && response.value != null)
                                 {       
                                     $('#editable-'+response.id).html(response.value);
+                                    $('#editable-'+response.id).parents('td').append('<p><a id="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" data-section="'+response.entry.section_id+'" data-week="'+response.entry.week+'" data-day="'+response.entry.day+'" data-pk="" data-title="Enter title"></a></p>');
+                                    addEditable($('#editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count));
                                 }
                             }else{          
                                 alert(response.msg);
@@ -259,6 +263,11 @@
 
                         }  
                 });
+            }
+
+            $('.editable').each(function(){
+                var editable = $(this);
+                addEditable(editable);
             });
         });
 
