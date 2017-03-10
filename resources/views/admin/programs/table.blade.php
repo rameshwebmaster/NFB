@@ -72,12 +72,12 @@
                                                    class="btn-delete">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
-                                                </p>
                                                 <form id="deleteProgramEntry{{ $entry->id }}"
                                                       action="{{ route('deleteProgramEntry', ['entry' => $entry->id]) }}" method="post">
                                                     {{ csrf_field() }}
                                                     {{ method_field('delete') }}
                                                 </form>
+                                                </p>
                                                 @php $count++ @endphp
                                             @endif
                                         @endforeach
@@ -248,8 +248,10 @@
                                 if(response.value != "" && response.value != null)
                                 {       
                                     $('#editable-'+response.id).html(response.value);
-                                    $('#editable-'+response.id).parents('td').append('<p><a id="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" data-section="'+response.entry.section_id+'" data-week="'+response.entry.week+'" data-day="'+response.entry.day+'" data-pk="" data-title="Enter title"></a></p>');
-                                    addEditable($('#editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count));
+                                    if (isNaN(response.id)) {
+                                        $('#editable-'+response.id).parents('td').append('<p><a id="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" data-section="'+response.entry.section_id+'" data-week="'+response.entry.week+'" data-day="'+response.entry.day+'" data-pk="" data-title="Enter title"></a></p>');
+                                        addEditable($('#editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count));
+                                    }
                                 }
                             }else{          
                                 alert(response.msg);
