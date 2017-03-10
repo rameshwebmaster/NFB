@@ -243,7 +243,7 @@
                         url: '{{url("nfb-admin/programs")}}'+'/{{$program->id."/entry"}}',
                         params: { _token: $('meta[name="csrf-token"]').attr('content'),section: editable.data('section'), week: editable.data('week'),day: editable.data('day'),title: editable.val(), quantity: 1},
                         success : function(response) {
-                            // var response= JSON.parse(response);   
+                            var response= JSON.parse(response);   
                             if(response.success == true) {          
                                 if(response.value != "" && response.value != null)
                                 {
