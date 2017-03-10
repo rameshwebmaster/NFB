@@ -51,15 +51,17 @@ class ProgramEntriesController extends Controller
                     ['week','=',$entry->week],
                     ['day','=',$entry->day],
                     ])->count();
+            $delete = '';
 
             header('Content-type:application/json');
             if (isset($data['id']) && !empty($data['id'])) {
                 $id = $entry->id ;
             } else {
                 $id = $entry->section_id.'-'.$entry->week.'-'.$entry->day.'-'.($count-1);
+                $delete = '&nbsp;<a href="javascript:void(0);" title="Delete" data-form="deleteProgramEntry'.$entry->id.'" class="btn-delete"><i class="fa fa-trash"></i></a><form id="deleteProgramEntry'.$entry->id.'" action="'.route('deleteProgramEntry', ['entry' => $entry->id]).'" method="post">'.csrf_field().method_field('delete').'</form>';
             } 
             
-            return json_encode(array('success' => true, 'id' => $id, 'value' => $entry->title, 'count' => $count, 'entry' => $entry));
+            return json_encode(array('success' => true, 'id' => $id, 'value' => $entry->title, 'count' => $count, 'entry' => $entry, 'delete' => $delete));
         }    
         else
             return redirect()->route('programTable', ['program' => $program->id])->with('success', 'Entry Created Successfully');

@@ -246,10 +246,19 @@
                             // var response= JSON.parse(response);   
                             if(response.success == true) {          
                                 if(response.value != "" && response.value != null)
-                                {       
-                                    $('#editable-'+response.id).html(response.value);
+                                {
+                                    editable.editable('destroy');
+                                    editable.html(response.value);
+                                    editable.data('pk',response.entry.id);
+                                    editable.attr('id','editable-'+response.entry.id);
+                                    addEditable(editable);
+
                                     if (isNaN(response.id)) {
-                                        $('#editable-'+response.id).parents('td').append('<p><a id="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" data-section="'+response.entry.section_id+'" data-week="'+response.entry.week+'" data-day="'+response.entry.day+'" data-pk="" data-title="Enter title"></a></p>');
+
+                                        // Add delete action button
+                                        editable.parents('p').append(response.delete);
+
+                                        $('#editable-'+response.entry.id).parents('td').append('<p><a id="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" data-section="'+response.entry.section_id+'" data-week="'+response.entry.week+'" data-day="'+response.entry.day+'" data-pk="" data-title="Enter title"></a></p>');
                                         addEditable($('#editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count));
                                     }
                                 }
