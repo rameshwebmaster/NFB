@@ -62,6 +62,7 @@
                             <tr>
                                 <td>{{ $section->title }}</td>
                                 @foreach(['1', '2', '3', '4', '5', '6', '7'] as $day)
+                                @php $count = 0 @endphp
                                     <td>
                                         @foreach($section->entries as $entry)
                                             @if($entry->day == $day)
@@ -71,15 +72,16 @@
                                                    class="btn-delete">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
-                                                </p>
                                                 <form id="deleteProgramEntry{{ $entry->id }}"
                                                       action="{{ route('deleteProgramEntry', ['entry' => $entry->id]) }}" method="post">
                                                     {{ csrf_field() }}
                                                     {{ method_field('delete') }}
                                                 </form>
+                                                </p>
+                                                @php $count++ @endphp
                                             @endif
                                         @endforeach
-                                        <p><a id="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="" data-title="Enter title"></a></p>
+                                        <p><a id="editable-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="" data-title="Enter title"></a></p>
                                     </td>
                                 @endforeach
                             </tr>
@@ -234,8 +236,8 @@
     <script>
         $(document).ready(function() {
             
-            $('.editable').each(function(){
-                var editable = $(this);
+            function addEditable(editable) {
+
                 editable.editable({
                         emptytext : 'Click to Add Meal',
                         url: '{{url("nfb-admin/programs")}}'+'/{{$program->id."/entry"}}',
@@ -244,8 +246,21 @@
                             var response= JSON.parse(response);   
                             if(response.success == true) {          
                                 if(response.value != "" && response.value != null)
-                                {       
-                                    $('#editable-'+response.id).html(response.value);
+                                {
+                                    editable.editable('destroy');
+                                    editable.html(response.value);
+                                    editable.data('pk',response.entry.id);
+                                    editable.attr('id','editable-'+response.entry.id);
+                                    addEditable(editable);
+
+                                    if (isNaN(response.id)) {
+
+                                        // Add delete action button
+                                        editable.parents('p').append(response.delete);
+
+                                        $('#editable-'+response.entry.id).parents('td').append('<p><a id="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count+'" data-section="'+response.entry.section_id+'" data-week="'+response.entry.week+'" data-day="'+response.entry.day+'" data-pk="" data-title="Enter title"></a></p>');
+                                        addEditable($('#editable-'+response.entry.section_id+'-'+response.entry.week+'-'+response.entry.day+'-'+response.count));
+                                    }
                                 }
                             }else{          
                                 alert(response.msg);
@@ -259,6 +274,11 @@
 
                         }  
                 });
+            }
+
+            $('.editable').each(function(){
+                var editable = $(this);
+                addEditable(editable);
             });
         });
 
