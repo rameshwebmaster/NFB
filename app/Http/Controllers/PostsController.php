@@ -11,6 +11,7 @@ use Auth;
 use DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Validator;
 
 class PostsController extends Controller
 {
@@ -70,16 +71,21 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
-
+      
         $availableMetas = ['instagram_id', 'country', 'phone_number', 'address', 'website'];
-
-        $this->validate($request, [
+//  'attachment' => 'required|exists:attachments,id',
+       $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'attachment' => 'required|exists:attachments,id',
             'access' => 'in:free,premium',
             'format' => 'in:standard,video',
         ]);
+
+       if($validator->fails()){
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+       }
+
         $data = $this->prepareForDatabase($request);
+
         DB::transaction(function () use ($data, $availableMetas, $request) {
             $post = Post::create($data);
             Auth::user()->did('Created ' . str_singular($this->postType) . ' with id: ' . $post->id);
@@ -140,13 +146,21 @@ class PostsController extends Controller
     {
 
         $availableMetas = ['instagram_id', 'country', 'phone_number', 'address', 'website'];
-
-        $this->validate($request, [
+         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'attachment' => 'required|exists:attachments,id',
             'access' => 'in:free,premium',
             'format' => 'in:standard,video',
         ]);
+     
+       if($validator->fails()){
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+       }
+        // $this->validate($request, [
+        //     'title' => 'required',
+        //     'attachment' => 'required|exists:attachments,id',
+        //     'access' => 'in:free,premium',
+        //     'format' => 'in:standard,video',
+        // ]);
 
         $data = $this->prepareForDatabase($request);
         DB::transaction(function () use ($data, $post, $availableMetas, $request) {

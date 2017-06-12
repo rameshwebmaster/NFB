@@ -12,12 +12,21 @@ class StreamAPIController extends Controller
     public function index()
     {
         $streams = Stream::orderBy('created_at', 'desc')->where('status', 'ended')->get();
-
+       
         $streams->each(function ($stream) {
             $stream->doctorName = "";
+           
             if ($stream->doctor) {
                 $stream->doctorName = $stream->doctor->first_name . " " . $stream->doctor->last_name;
+            if($stream->doctor->avatar){
+                 $stream->avatar=  url('/uploads/avatars/'.$stream->doctor->avatar);   
+             }else{
+                $stream->avatar=  '';
+             }
+                
+              
             }
+             
             $stream->url = url('/playlists/' . $stream->filename);
             $stream->date = $stream->created_at->toFormattedDateString();
             unset($stream->filename);

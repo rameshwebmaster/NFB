@@ -291,14 +291,14 @@
                             <label class="radio-inline p-0">
                                 <div class="radio radio-info">
                                     <input type="radio" name="type" value="gold"
-                                           id="gold" {{ $isEdit ? ($user->subscription->type == 'gold' ? 'checked' : '') : 'checked' }}>
+                                           id="gold" {{ isset($user->subscription->type, $isEdit) ? ($user->subscription->type == 'gold' ? 'checked' : '') : 'checked'  }}>
                                     <label for="gold">GOLD</label>
                                 </div>
                             </label>
                             <label class="radio-inline">
                                 <div class="radio radio-info">
                                     <input type="radio" name="type" value="platinum"
-                                           id="platinum" {{ ($isEdit && $user->subscription->type == 'platinum') ? 'checked' : '' }}>
+                                           id="platinum" {{  isset($isEdit , $user->subscription->type) ? ($user->subscription->type == 'platinum' ? 'checked' : ''):'' }}>
                                     <label for="platinum">PLATINUM</label>
                                 </div>
                             </label>
@@ -312,10 +312,10 @@
                         <label>Subscription Date Range <span class="text-danger">*</span></label>
                         <div class="input-daterange input-group" id="date-range">
                             <input type="text" name="start_date" class="form-control"
-                                   value="{{ isset($user) ? $user->subscription->start_date->format('m/d/Y') : old('start_date') }}">
+                                   value="{{ isset($user,$user->subscription) ? $user->subscription->start_date->format('m/d/Y') : old('start_date') }}">
                             <span class="input-group-addon bg-info b-0 text-white">to</span>
                             <input type="text" name="expiry_date" class="form-control"
-                                   value="{{ isset($user) ? $user->subscription->expiry_date->format('m/d/Y') : old('expiry_date') }}">
+                                   value="{{ isset($user,$user->subscription) ? $user->subscription->expiry_date->format('m/d/Y') : old('expiry_date') }}">
                         </div>
                     </div>
                     {{--End of Subscription Date Range Field--}}

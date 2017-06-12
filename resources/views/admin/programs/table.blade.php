@@ -64,24 +64,100 @@
                                 @foreach(['1', '2', '3', '4', '5', '6', '7'] as $day)
                                 @php $count = 0 @endphp
                                     <td>
+
                                         @foreach($section->entries as $entry)
+                                            @foreach($entry->translations as $entry_arabic )
+                                     
                                             @if($entry->day == $day)
-                                                <p><a id="editable-{{ $entry->id }}" href="javascript:void(0);" class="editable" data-type="text" data-name="editable-{{ $entry->id }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="{{ $entry->id }}" data-title="Enter meal">{{ $entry->title }}</a>
+
+                                                <p><a class="editable editable-click" href="javascript:void(0);"  data-toggle="modal"
+                        data-target="#section-modal-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}">{{ $entry->title }}</a>
                                                 <a href="javascript:void(0);" title="Delete" 
                                                    data-form="{{ 'deleteProgramEntry' . $entry->id }}"
                                                    class="btn-delete">
                                                     <i class="fa fa-trash"></i>
-                                                </a>
+                                                </a><div class="modal fade" id="section-modal-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}" role="dialog" style="display: hide">
+                            <div class="modal-dialog modal-md" role="document">
+                            <form action=" {{ route('createProgramEntry', ['program' => $program->id]) }}" id="section-form"
+                            method="post">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                            <button type="button" data-dismiss="modal" class="close">×</button>
+                            <h4 class="modal-title">Add Title</h4>
+                            </div>
+                            <div class="modal-body">
+                            <div class="row">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                            <label for="title" class="control-label">Section Title</label>
+                            <input type="text" class="form-control" name="title" id="section-title" value="{{ $entry->title }}" required>
+
+                            <label for="arabic_title" class="control-label">Section Arabic Title</label>
+                            <input type="text" class="form-control" value="{{$entry_arabic->value}}" name="arabic_title" id="section-arabic-title"
+                            required>
+                            <input type="hidden" class="form-control" name="section" id="section" value="{{ $section->id }}">
+                            <input type="hidden" class="form-control" name="week" id="week" value="{{ $week }}">
+                            <input type="hidden" class="form-control" name="day" id="day" value="{{ $day }}">
+                            <input type="hidden" class="form-control" name="quantity" id="quantity" value="1">
+                            <input type="hidden" class="form-control" name="id" id="id" value="{{ $entry->id }}">
+                            </div>
+                            </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" id="add-section">Add</button>
+                            </div>
+                            </div>
+                            </form>
+                            </div>
+                            </div> 
                                                 <form id="deleteProgramEntry{{ $entry->id }}"
                                                       action="{{ route('deleteProgramEntry', ['entry' => $entry->id]) }}" method="post">
                                                     {{ csrf_field() }}
                                                     {{ method_field('delete') }}
                                                 </form>
-                                                </p>
+                                                 </p>
                                                 @php $count++ @endphp
                                             @endif
+                                            @endforeach
                                         @endforeach
-                                        <p><a id="editable-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}" href="javascript:void(0);" class="editable editable-empty" data-type="text" data-name="editable-{{ $section->id }}-{{ $week }}-{{ $day }}" data-section="{{ $section->id }}" data-week="{{ $week }}" data-day="{{ $day }}" data-pk="" data-title="Enter title"></a></p>
+                                        <p><a class="editable editable-empty editable-click" href="javascript:void(0);" data-toggle="modal" style="color: #dd1144"
+                        data-target="#section-modal-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}"><i>Click to Add Meal</i></a></p>
+                            <div class="modal fade" id="section-modal-{{ $section->id }}-{{ $week }}-{{ $day }}-{{ $count }}" role="dialog" style="display: hide">
+                            <div class="modal-dialog modal-md" role="document">
+                            <form action=" {{ route('createProgramEntry', ['program' => $program->id]) }}" id="section-form"
+                            method="post">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                            <button type="button" data-dismiss="modal" class="close">×</button>
+                            <h4 class="modal-title">Add Title</h4>
+                            </div>
+                            <div class="modal-body">
+                            <div class="row">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                            <label for="title" class="control-label">Section Title</label>
+                            <input type="text" class="form-control" name="title" id="section-title" required>
+
+                            <label for="arabic_title" class="control-label">Section Arabic Title</label>
+                            <input type="text" class="form-control" name="arabic_title" id="section-arabic-title"
+                            required>
+                            <input type="hidden" class="form-control" name="section" id="section" value="{{ $section->id }}">
+                            <input type="hidden" class="form-control" name="week" id="week" value="{{ $week }}">
+                            <input type="hidden" class="form-control" name="day" id="day" value="{{ $day }}">
+                            <input type="hidden" class="form-control" name="quantity" id="quantity" value="1">
+                             <input type="hidden" class="form-control" name="translatable_type" id="translatable_type" value="program_entry">
+                            </div>
+                            </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" id="add-section">Add</button>
+                            </div>
+                            </div>
+                            </form>
+                            </div>
+                            </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -187,37 +263,7 @@
 
 
 
-    {{--<div class="modal fade" id="section-modal" role="dialog">--}}
-    {{--<div class="modal-dialog modal-md" role="document">--}}
-    {{--<form action="{{ route('createProgramSection', ['program' => $program->id]) }}" id="section-form"--}}
-    {{--method="post">--}}
-    {{--<div class="modal-content">--}}
-    {{--<div class="modal-header">--}}
-    {{--<button type="button" data-dismiss="modal" class="close">×</button>--}}
-    {{--<h4 class="modal-title">Add Section to Table</h4>--}}
-    {{--</div>--}}
-    {{--<div class="modal-body">--}}
-    {{--<div class="row">--}}
-    {{--{{ csrf_field() }}--}}
-    {{--<div class="form-group">--}}
-    {{--<label for="title" class="control-label">Section Title</label>--}}
-    {{--<input type="text" class="form-control" name="title" id="section-title" required>--}}
-    {{--</div>--}}
-    {{--<div class="form-group">--}}
-    {{--<label for="arabic_title" class="control-label">Section Arabic Title</label>--}}
-    {{--<input type="text" class="form-control" name="arabic_title" id="section-arabic-title"--}}
-    {{--required>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="modal-footer">--}}
-    {{--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>--}}
-    {{--<button type="submit" class="btn btn-success" id="add-section">Add</button>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</form>--}}
-    {{--</div>--}}
-    {{--</div>--}}
+    
 
 
 @endsection
@@ -243,7 +289,8 @@
                         url: '{{url("nfb-admin/programs")}}'+'/{{$program->id."/entry"}}',
                         params: { _token: $('meta[name="csrf-token"]').attr('content'),section: editable.data('section'), week: editable.data('week'),day: editable.data('day'),title: editable.val(), quantity: 1},
                         success : function(response) {
-                            var response= JSON.parse(response);   
+                            var response= JSON.parse(response);  
+                           
                             if(response.success == true) {          
                                 if(response.value != "" && response.value != null)
                                 {

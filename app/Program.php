@@ -19,5 +19,18 @@ class Program extends Model
     {
         return $this->hasMany(ProgramSection::class, 'program_id');
     }
+
+    /*public function translations()
+    {
+        return $this->hasMany(ProgramSection::class, 'program_id');
+    }*/
+
+     public static function getProgramsIdType($program_id=0){
+        //this will return which type of program this.
+        if($program_id !=0){
+            $type = Program::select('type')->where('id',$program_id)->first();
+            return $type;
+        }
+      }
     
 }

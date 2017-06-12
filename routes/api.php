@@ -31,6 +31,10 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/user/self/messages/{message}', 'UsersAPIController@getUserMessage');
     Route::post('/user/register', 'UsersAPIController@register');
     Route::post('/user/self/reset', 'UsersAPIController@resetPassword');
+    Route::post('/user/subscription', 'UsersAPIController@updateSubscription');
+    Route::get('/user/getDoctors', 'UsersAPIController@getAllDoctors');
+    Route::get('/user/getUserSubType', 'UsersAPIController@getUserSubType');
+    Route::get('/user/AllStatus', 'UsersAPIController@AllStatus');
 
     Route::post('/feedback/{feedbackType}', 'FeedbackAPIController@store')->where('feedbackType', '(normal|bug)');
 
@@ -45,4 +49,10 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::get('/categories/{categoryType}', 'CategoriesAPIController@categoriesList')
         ->where('categoryType', '(recipe_cat|exercise_cat|advice_cat|company_cat)');
+
+    //Added for get nutrition guide    
+    Route::get('/getNutritionGuide', 'NutritionGuideAPIController@index');    
+
+    //Added for get CV Data    
+    Route::get('/getCV', 'CVAPIController@index');    
 });

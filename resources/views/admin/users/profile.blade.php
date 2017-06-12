@@ -31,18 +31,22 @@
                     </div>
                 </div>
                 <div class="user-btm-box">
-                    <div class="col-md-2 col-sm-4 text-center m-b-20"><p class="text-primary">
+                    <div class="col-md-1 col-sm-4 text-center m-b-20"><p class="text-primary">
                             Age</p>{{ isset($user->birth_date) ? $user->birth_date->diffInYears(\Carbon\Carbon::now()) : 'N/A' }}
                     </div>
-                    <div class="col-md-2 col-sm-4 text-center m-b-20"><p class="text-danger">Role</p>{{ $user->role }}</div>
-                    <div class="col-md-2 col-sm-4 text-center m-b-20"><p class="text-info">
+                    <div class="col-md-1 col-sm-4 text-center m-b-20"><p class="text-danger">Role</p>{{ $user->role }}</div>
+                    <div class="col-md-1 col-sm-4 text-center m-b-20"><p class="text-info">
                             Country</p>{{ $user->country['country_name'] or 'N/A' }}</div>
                     <div class="col-md-2 col-sm-4 text-center"><p class="text-info">
                             Mobile Number</p>{{ $user->getMeta('phone_number') }}</div>
                     <div class="col-md-2 col-sm-4 text-center"><p class="text-info">
                             Instagram ID</p>{{ $user->getMeta('instagram_id') }}</div>
-                    <div class="col-md-2 col-sm-4 text-center"><p class="text-info">
+                    <div class="col-md-1 col-sm-4 text-center"><p class="text-info">
                             Subscription</p>{{ $user->subscription->type or '' }}</div>
+                    <div class="col-md-2 col-sm-4 text-center"><p class="text-info">
+                            Doctor</p><span>Dr. Abdullah Al-Mutawa</span></div>
+                    <div class="col-md-2 col-sm-4 text-center"><p class="text-info">
+                            Trainer</p><span>Viktoriia Dudko</span></div>                
                 </div>
             </div>
         </div>

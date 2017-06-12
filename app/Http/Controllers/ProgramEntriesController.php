@@ -12,7 +12,9 @@ class ProgramEntriesController extends Controller
 
 
     public function store(Program $program, Request $request)
-    {   
+    {  
+	 
+
         // Check if ajax
         if ($request->ajax()) {
             $request->request->set('title', $request->get('value'));
@@ -27,14 +29,23 @@ class ProgramEntriesController extends Controller
         ]);
 
         $data = $request->all();
+        //dd($data);
+
         $data['section_id'] = $data['section'];
 
         if (isset($data['id']) && !empty($data['id'])) {
             $entry = ProgramEntry::find($data['id']);
             $entry->title = $request->get('title');
             $entry->save();
+
+             \DB::table('translations')
+                ->where('translatable_id','=',$entry->id)  
+                ->update(array('key' =>'program_entry_title'));
+
         } else {
+
             $entry = ProgramEntry::create($data);
+        
         }
 
         if (!empty($request->get('arabic_title'))) {

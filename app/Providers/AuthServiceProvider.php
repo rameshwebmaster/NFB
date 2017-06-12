@@ -15,11 +15,13 @@ use App\Policies\PostPolicy;
 use App\Policies\ProgramPolicy;
 use App\Policies\TransactionPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\CVPolicy;
 use App\Post;
 use App\Program;
 use App\Stream;
 use App\Transaction;
 use App\User;
+use App\CV;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -41,6 +43,7 @@ class AuthServiceProvider extends ServiceProvider
         Stream::class => LiveStreamPolicy::class,
         Program::class => ProgramPolicy::class,
         Activity::class => ActivityPolicy::class,
+        CV::class => CVPolicy::class
     ];
 
     /**

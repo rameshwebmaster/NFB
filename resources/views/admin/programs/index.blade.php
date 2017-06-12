@@ -38,10 +38,10 @@
                         @foreach($programs as $program)
                             <tr>
                                 <td>{{ $i }}</td>
-                                <td><a href="{{ '/programs/' . $program->id . '/edit' }}">{{ $program->title  }}</a>
+                                <td><a href="{{ route('editProgram', ['program' => $program->id]) }}">{{ $program->title  }}</a>
                                 </td>
-                                <td>{{ studly_case($program->type)  }}</td>
-                                {{--<td><a href="#" class="btn btn-primary">View Table</a></td>--}}
+                                <td>{{ ($program->type == 'RAMADAN_NU')? 'Ramadan Nutrition':'Regular Nutrition' }}</td>
+                               
                                 <td><a href="{{ route('programTable', ['program' => $program->id]) }}"
                                        class="btn btn-primary">View Table</a></td>
                                 <td>
@@ -69,5 +69,11 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="center-block">
+                {{ $programs->appends(Request::except('page'))->links() }}
+            </div>
+        </div>
+    </div>  
 @endsection

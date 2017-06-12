@@ -95,7 +95,7 @@ class UsersController extends Controller
         $file_name = uniqid();
         $avatar_name = $file_name . '.' . $file_ext;
         $path = public_path('uploads/avatars/' . $avatar_name);
-        Image::make($avatar)->fit(300, 300)->save($path);
+         Image::make($avatar)->fit(300, 300)->save($path);
         return $avatar_name;
     }
 
@@ -167,8 +167,9 @@ class UsersController extends Controller
 
     public function updateAppUser(User $user, UpdateAppUser $request)
     {
-        $data = $request->except(['password']);
-//        dd($data["language"]);
+
+        $data = $request->except(['password']); 
+        
         if ($request->hasFile('avatar')) {
             if (!empty($user->avatar)) {
                 File::delete(public_path('uploads/avatars/' . $user->avatar));
@@ -182,11 +183,18 @@ class UsersController extends Controller
         $data['start_date'] = $this->formatDate($data['start_date']);
         $data['expiry_date'] = $this->formatDate($data['expiry_date']);
         $user->update($data);
-        $user->subscription()->update([
+        $subs_user_id =Subscription::select('id')->where('user_id',$user->id)->first();
+        if(isset($subs_user_id->id)){
+            $user->subscription()->update([
             'type' => $data['type'],
             'start_date' => $data['start_date'],
             'expiry_date' => $data['expiry_date'],
         ]);
+        }else{
+            $subscription = new Subscription($data);
+            $user->subscription()->save($subscription);
+        }
+        
         if (isset($data['instagram_id'])) {
             $user->addOrUpdateMeta('instagram_id', $data['instagram_id']);
         }

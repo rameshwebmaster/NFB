@@ -94,12 +94,33 @@
                     </span>
                     </a>
                     <ul class="nav-second-level">
-                        <li><a href="{{ route('programs') }}">All Programs</a></li>
-                        <li><a href="{{ route('createProgram') }}">Create New Program</a></li>
+                        
+                      <li><a href="{{ route('programs_type') }}">Program Type</a></li>
+                      <li><a href="{{ route('programs') }}">All Programs</a></li>
+                      <li><a href="{{ url('nfb-admin/nutritionGuid/3/edit') }}">Nutrition Guide</a></li>
+                      <li><a href="{{ route('createProgram') }}">Create New Program</a></li>
+
                     </ul>
                 </li>
             @endif
 
+                 @if($currentUser->can('viewMenu', \App\CV::class))
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class=ti-user></i>
+                        <span class="hide-menu">
+                        CV
+                        <span class="ti-angle-right arrow"></span>
+                    </span>
+                    </a>
+                    <ul class="nav-second-level">
+                        
+                      <li><a href="{{ route('CV') }}">All CV</a></li>
+                      <li><a href="{{ route('createCV') }}">Create New CV</a></li>
+
+                    </ul>
+                </li>
+                 @endif
 
             @if($currentUser->can('viewMenu', \App\Attachment::class))
                 <li>

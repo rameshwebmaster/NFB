@@ -14,10 +14,13 @@ use Intervention\Image\Facades\Image;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
+// Route::get('testing', function () {
+//    $bool = DB::statement("ALTER TABLE `translations` CHANGE `translatable_type` `translatable_type` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;");
+//    dd($bool);
+// });
 
 Auth::routes();
 
@@ -96,8 +99,32 @@ Route::group(['prefix' => 'nfb-admin'], function () {
     Route::patch('/categories/{category}', 'CategoriesController@update')->name('category');
     Route::delete('/categories/{category}', 'CategoriesController@delete');
 
+    //Added For Nutrition Guidline
+    Route::get('/nutritionGuid','NutritionGuideController@index')->name('nutritionsGuid');
+    Route::get('/nutritionGuid/create','NutritionGuideController@create')->name('createNutritionGuid');
+    Route::post('/nutritionGuid/create','NutritionGuideController@store');
+    Route::get('/nutritionGuid/{guide}/edit','NutritionGuideController@edit')->name('editNutritionGuid');
+    Route::patch('/nutritionGuid/{guide}','NutritionGuideController@update')->name('nutritionGuid');
+    Route::delete('/nutritionGuid/{guide}','NutritionGuideController@delete')->name('deletNeutritionGuid');
 
+    //Added For CV
+    Route::get('/cv', 'CVController@index')->name('CV');
+    Route::get('/cv/create', 'CVController@create')->name('createCV');
+    Route::post('/cv/create', 'CVController@store');
+    Route::get('/cv/{guide}/edit', 'CVController@edit')->name('editCV');
+    Route::patch('/cv/{guide}', 'CVController@update')->name('CVS');
+    Route::delete('/cv/{guide}', 'CVController@delete')->name('deleteCV');
+ 
+    //Added For program Type
+    Route::get('/program_type', 'ProgramTypeController@index')->name('programs_type');
+    Route::get('/program_type/create', 'ProgramTypeController@create')->name('createProgramType');
+    Route::post('/program_type/create', 'ProgramTypeController@store');
+    Route::get('/program_type/{program}/edit', 'ProgramTypeController@edit')->name('editProgramType');
+    Route::patch('/program_type/{program}', 'ProgramTypeController@update')->name('programType');
+    Route::delete('/program_type/{program}', 'ProgramTypeController@delete')->name('deleteProgramType');
+    Route::get('/programs_type/show', 'ProgramsController@show_program')->name('showProgramType');
 
+    //Added for programs
     Route::get('/programs', 'ProgramsController@index')->name('programs');
     Route::get('/programs/create', 'ProgramsController@create')->name('createProgram');
     Route::post('/programs/create', 'ProgramsController@store');
@@ -105,6 +132,7 @@ Route::group(['prefix' => 'nfb-admin'], function () {
     Route::patch('/programs/{program}', 'ProgramsController@update')->name('program');
     Route::delete('/programs/{program}', 'ProgramsController@delete');
     Route::get('/programs/{program}/table', 'ProgramsController@table')->name('programTable');
+   
 
     Route::post('/programs/{program}/section', 'ProgramSectionsController@store')->name('createProgramSection');
     Route::post('/programs/{program}/entry', 'ProgramEntriesController@store')->name('createProgramEntry');

@@ -16,7 +16,10 @@ class HealthStatus extends Model
         'middle_circumference',
         'arm_circumference',
         'hip_circumference',
-        'diseases'
+        'diseases',
+        'waist_circumference',
+        'thighs_circumference'
+
     ];
 
     protected static $measures = [
@@ -27,6 +30,8 @@ class HealthStatus extends Model
         'middle_circumference',
         'arm_circumference',
         'hip_circumference',
+        'waist_circumference',
+        'thighs_circumference'
     ];
 
     public static function isValidMeasure($measure)

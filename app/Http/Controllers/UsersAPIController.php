@@ -16,7 +16,8 @@ use Intervention\Image\Facades\Image;
 use Log;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use App\Subscription;
+use DB;
 use Validator;
 
 class UsersAPIController extends Controller
@@ -38,7 +39,9 @@ class UsersAPIController extends Controller
         $credentials = $request->only('username', 'password');
         $credentials['role'] = 'consumer';
         try {
-            if (!$token = JWTAuth::attempt($credentials)) {
+            $token = JWTAuth::attempt($credentials);
+            
+            if (!$token) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
@@ -46,9 +49,9 @@ class UsersAPIController extends Controller
         }
         $user = User::where('username', $credentials['username'])->first();
         $now = Carbon::now();
-        if ($user->subscription->start_date->gt($now) || $user->subscription->expiry_date->lt($now)) {
-            return response()->json(['error' => 'login_not_possible'], 402);
-        }
+        // if ($user->subscription->start_date->gt($now) || $user->subscription->expiry_date->lt($now)) {
+        //     return response()->json(['error' => 'login_not_possible'], 402);
+        // }
         $login = new Login(['platform' => $request->get('platform'), 'token' => $request->get('device_token')]);
         $user->logins()->save($login);
         return response()->json(compact('token'));
@@ -64,15 +67,18 @@ class UsersAPIController extends Controller
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
             'username' => $user->username,
-            'avatar' => url('/uploads/avatars/' . $avatar),
+            'avatar' => url('/api/v1/user/avatar/' . $avatar),
             'country' => $user->country,
             'language' => $user->language,
             'birth_date' => $user->birth_date ? $user->birth_date->toDateTimeString() : null,
             'instagram_id' => isset($metas['instagram_id']) ? $metas['instagram_id']->value : null,
             'phone_number' => isset($metas['phone_number']) ? $metas['phone_number']->value : null,
+            'doctor_name' =>'Dr. Abdullah Al-Mutawa',
+            'trainer_name'=>'Viktoriia Dudko',
+            'user_exercise_level'  => isset($metas['user_exercise_level']) ? $metas['user_exercise_level']->value : null,
             'hasUpdatedInfo' => false,
             'weight_chart' => [],
-            'health_status' => $user->healthStatuses()->latest()->first(),
+            'health_status' => $user->healthStatuses()->select('id','user_id','weight','height','diseases','waist_circumference','thighs_circumference')->orderBy('id', 'desc')->first(),
             'unread' => $user->messages()->wherePivot('read', 0)->count(),
             'subscription' => $user->subscription()->select('id', 'user_id', 'expiry_date', 'start_date', 'type', 'status', 'created_at')->first(),
         ];
@@ -104,7 +110,7 @@ class UsersAPIController extends Controller
         if (!$request->has('disease')) {
             $statusData['diseases'] = '0,0,0,0,0';
         } else {
-            $statusData['diseases'] = User::diseaseString($request->get('disease'));
+            $statusData['diseases'] = User::diseaseString($request->disease);
         }
         $status = new HealthStatus($statusData);
         $user->healthStatuses()->save($status);
@@ -128,11 +134,15 @@ class UsersAPIController extends Controller
             $bmiIndex = 7;
         }
         $level = $user->metaFor('user_nutrition_level');
-        $program = Program::where('bmi', $bmiIndex)->where('level', $level->value)->where('diseases', $statusData['diseases'])->first();
-        if ($program) {
+
+     $program = Program::where('bmi', $bmiIndex)->where('level', $level->value)->where('diseases', $statusData['diseases'])->first();
+      
+     if ($program) {
             $user->addOrUpdateMeta('user_nutrition_level', $level->value + 1);
             $user->addOrUpdateMeta('user_nutrition_program', $program->id);
+            $user->addOrUpdateMeta('user_bim_index', $bmiIndex);
         }
+       
         return response()->json(['success' => 'info_updated']);
     }
 
@@ -144,6 +154,7 @@ class UsersAPIController extends Controller
             $then = Carbon::createFromTimestamp($lastUpdate->value);
             $now = Carbon::now();
             $diff = $now->diffInDays($then);
+
             if ($diff >= 14) {
                 return response()->json(['success' => 'allowed_to_update']);
             } else {
@@ -162,13 +173,14 @@ class UsersAPIController extends Controller
     public function getUserStats(Request $request)
     {
         $stat = $request->get('measure');
+
         if (!HealthStatus::isvalidMeasure($stat)) {
             return response()->json(['error' => 'no_such_measure'], 400);
         }
         $user = JWTAuth::toUser();
         $history = $user->healthHistory($stat);
         $history->each(function ($status) {
-            $status->update_time = $status->created_at->format('d M y');
+            $status->update_time = $status->created_at->format('d M');
         });
         return response()->json($history);
     }
@@ -223,6 +235,10 @@ class UsersAPIController extends Controller
             'gender' => 'required|in:1,2',
             'blood_type' => 'required',
             'language' => 'required',
+            'birth_date'=>'required',
+            'password'=>'required',
+            'platform'=>'required',
+
         ]);
 
         //Check whether validation is failed or passed
@@ -232,6 +248,7 @@ class UsersAPIController extends Controller
         }
 
         $data = $request->except(['avatar']);
+        $data['role'] = 'consumer';
         if ($request->hasFile('avatar')) {
             $data['avatar'] = $this->saveAvatar($request->file('avatar'));
         }
@@ -253,7 +270,23 @@ class UsersAPIController extends Controller
         $user->addOrUpdateMeta('user_exercise_count', 1);
         $user->addOrUpdateMeta('user_exercise_level', 1);
         $user->addOrUpdateMeta('user_nutrition_level', 1);
-        return ['success' => 'user_created_successfully'];
+
+        $credentials = $request->only('username', 'password');
+        $credentials['role'] = 'consumer';
+        try {
+            $token = JWTAuth::attempt($credentials);
+            
+            if (!$token) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+        $login = new Login(['platform' => $request->get('platform'), 'token' => $request->get('device_token')]);
+        $user->logins()->save($login);
+
+        //return response()->json(compact('token'));
+        return ['success' => 'user_created_successfully','token'=>$token];
     }
 
 
@@ -280,6 +313,76 @@ class UsersAPIController extends Controller
             $user->password = bcrypt($password);
             $user->save();
         });
+    }
+
+    public function updateSubscription(Request $request){
+
+         $validator = Validator::make($request->all(), [
+            // 'user_id' => 'required',
+            'start_date' => 'required',
+            'expiry_date' => 'required',
+            'type' => 'required',
+            'status'=>'required',   
+            //'receipt' => 'required',
+            //'purchase_id'=>'required',
+        ]);
+    
+        $user = JWTAuth::toUser(); 
+          //Check whether validation is failed or passed
+        if($validator->fails()){
+            //Redirect back with validation errors
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        $data['user_id'] = $user->id;
+        $data['type']=$request->type;
+        $data['receipt']=$request->receipt;
+        $data['purchase_id']=$request->purchase_id;
+        $data['start_date'] = date("Y-m-d H:i:s",strtotime($request->start_date));
+        $data['expiry_date'] = date("Y-m-d H:i:s",strtotime($request->expiry_date));
+        $data['status'] = $request->status;
+       
+        $sub_id_db = Subscription::select('id')->where('user_id', $user->id)->first();
+   
+        if(isset($sub_id_db->id)){
+
+           $user->subscription()->update($data);
+         
+        }else{
+             $subscription = new Subscription($data);
+            $user->subscription()->save($subscription);
+         
+        }
+       
+        return ['success' => 'user_subscribed_successfully']; 
+    }
+
+    public function getAllDoctors(Request $request){
+        $role = "Doctor";
+        $user = JWTAuth::toUser();
+        $doctor_data =  User::select('id','username','email','first_name','last_name','country','gender','birth_date','language',DB::raw('CONCAT("'.url('/').'", "/", `avatar`) as avatar'))->where('role','LIKE','%'.$role.'%')->get();
+       
+        return response()->json($doctor_data);
+    }
+
+    public function getUserSubType(Request $request){
+        $user = JWTAuth::toUser();
+
+        $subs_user_id =Subscription::select('type','start_date','expiry_date')->where('user_id',$user->id)->first();
+        //dd($subs_user_id);
+         return response()->json($subs_user_id);
+    }
+
+    public function AllStatus(Request $request){
+
+        //to know users last actions user_nutrition_program,user_nutrition_level,last_health_status_update,user_bim_index
+        $data = array();
+        $user = JWTAuth::toUser();
+        $data['user_nutrition_program'] = $user->metaFor('user_nutrition_program');
+        $data['user_nutrition_level'] = $user->metaFor('user_nutrition_level');
+        $data['last_health_status_update'] = $user->metaFor('last_health_status_update');
+        $data['user_bim_index'] = $user->metaFor('user_bim_index');
+       return response()->json($data);
     }
 
 }

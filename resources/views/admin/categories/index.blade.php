@@ -5,7 +5,23 @@
 @section('page-title')
     <div class="col-xs-6">
         <h4 class="page-title">
-            Recipe Categories
+        <?php $typeCategories = Array(
+        'recipe_cat' => 'Recipe',
+        'advice_cat'=> 'Advice',
+         'company_cat' => 'Company',
+        'exercise_cat' => 'Exercise'
+        );
+      
+      foreach($typeCategories as $x => $x_value ){
+            // dd($x);
+            if($x == $categoryType){
+               echo $x_value .' Categories';
+                break;
+            }
+        } 
+        ?>
+           <!--  Recipe Categories {{$categoryType}} -->
+       
         </h4>
     </div>
     <div class="col-xs-6">

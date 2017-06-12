@@ -72,6 +72,20 @@
                             @endforeach
                         </select>
                     </div>
+                   
+                     <div class="form-group"> 
+                          <label for="type">Program Type</label>
+                          <select name="type" id="type" class="form-control" {{ ($isEdit == true) ? 'disabled':''}}>
+                          @foreach($program_type as $pro_type_key => $pro_type_val)
+                            
+                                <option value="{{ $pro_type_key }}"
+                                 @if(isset($program) && $program->type == $pro_type_key)
+                                    {{ 'selected' }}
+                                  @endif
+                                >{{ $pro_type_val }}</option>
+                             @endforeach 
+                          </select> 
+                     </div>
 
                     <button type="submit" class="btn btn-success btn-block">{{ $isEdit ? 'Update' : 'Submit' }}</button>
                 </div>

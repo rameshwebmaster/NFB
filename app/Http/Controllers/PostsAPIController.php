@@ -32,6 +32,7 @@ class PostsAPIController extends Controller
 
     public function index($post_type, Request $request)
     {
+        
         $cat = ($request->get('cat') !== null) ? $request->get('cat') : null; //$request->get('cat') ?? null;  
         if ($cat) {
             $category = Category::where('id', $cat)->first();

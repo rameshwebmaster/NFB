@@ -17,4 +17,8 @@ class ProgramEntry extends Model
         $this->attributes['translations'][$key] = $value;
     }
 
+    public function translations(){
+    	return $this->hasMany(Translation::class, 'translatable_id');
+    }
+
 }

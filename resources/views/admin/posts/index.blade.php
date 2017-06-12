@@ -206,15 +206,17 @@
                 deleteForm.setAttribute('action', route);
             });
         }
-        selectAll.addEventListener('click', function (e) {
-            for (var id of batchIds) {
-                if (!isAllSelected) {
-                    id.setAttribute('checked', 'checked');
-                } else {
-                    id.removeAttribute('checked');
-                }
+         $('.selectAll').on('click', function() {
+            if(this.checked) {
+                    $(':checkbox').each(function() {
+                        this.checked = true;
+                    });
             }
-            isAllSelected = !isAllSelected;
-        });
+            else {
+                    $(':checkbox').each(function() {
+                        this.checked = false;
+                    });
+            }
+    });
     </script>
 @endsection

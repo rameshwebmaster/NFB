@@ -62,9 +62,10 @@ trait Translatable
      * @param string $lang
      * @return mixed
      */
-    private function addTranslation($key, $value, $lang = 'ar')
+    private function addTranslation($key, $value, $lang = 'ar', $trans='program_entry')
     {
-        $translation = new Translation(['key' => $key, 'value' => $value, 'lang' => $lang]);
+        $translation = new Translation(['key' => $key, 'value' => $value, 'lang' => $lang, 'translatable_type' => $trans]);
+      
         $this->translations()->save($translation);
         return $translation;
     }

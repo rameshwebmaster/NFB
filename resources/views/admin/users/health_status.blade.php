@@ -32,11 +32,13 @@
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="?measure=Weight">Weight</a></li>
                         <li><a href="?measure=height">Height</a></li>
-                        <li><a href="?measure=shoulder_width">Shoulder Width</a></li>
+                       <!--  <li><a href="?measure=shoulder_width">Shoulder Width</a></li>
                         <li><a href="?measure=chest_circumference">Chest Circumference</a></li>
                         <li><a href="?measure=middle_circumference">Middle Circumference</a></li>
                         <li><a href="?measure=arm_circumference">Arm Circumference</a></li>
-                        <li><a href="?measure=hip_circumference">Hip Circumference</a></li>
+                        <li><a href="?measure=hip_circumference">Hip Circumference</a></li> -->
+                        <li><a href="?measure=waist_circumference">Waist Circumference</a></li>
+                        <li><a href="?measure=thighs_circumference">Thighs Circumference</a></li>
                     </ul>
                 </div>
                 {!! $measureChart->render() !!}
