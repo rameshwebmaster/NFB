@@ -385,4 +385,13 @@ class UsersAPIController extends Controller
        return response()->json($data);
     }
 
+    public function SaveDeviceToken(Request $request){
+
+        $user = JWTAuth::toUser();
+      
+        $login = new Login(['platform' => $request->get('platform'), 'token' => $request->get('device_token')]);
+        $user->logins()->save($login);
+       return ['success' => 'device_token_saved']; 
+    }
+
 }

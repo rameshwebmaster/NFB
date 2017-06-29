@@ -48,6 +48,7 @@ class PostsAPIController extends Controller
             $lastExerciseDate = Carbon::createFromTimestamp($lastExerciseTimestamp->value);
             $exerciseCount = $user->metaFor('user_exercise_count');
             $exerciseLevel = $user->metaFor('user_exercise_level');
+            
             $now = Carbon::now();
             if ($exerciseLevel->value < $category->order) {
                 return response()->json(['error' => 'this_level_is_locked_for_you'], 401);
@@ -66,6 +67,7 @@ class PostsAPIController extends Controller
                 $query->where('created_at', '<=', $lastPost->created_at);
             }
         }
+        //orderby('sort_no','ASC')
         if ($post_type == 'exercise') {
             $query->oldest();
         } else {

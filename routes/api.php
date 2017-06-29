@@ -35,7 +35,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/user/getDoctors', 'UsersAPIController@getAllDoctors');
     Route::get('/user/getUserSubType', 'UsersAPIController@getUserSubType');
     Route::get('/user/AllStatus', 'UsersAPIController@AllStatus');
-
+    //Save Device token
+    Route::post('/user/SaveDeviceToken', 'UsersAPIController@SaveDeviceToken');
+    
     Route::post('/feedback/{feedbackType}', 'FeedbackAPIController@store')->where('feedbackType', '(normal|bug)');
 
     Route::get('/user/self/programs/nutrition', 'ProgramsAPIController@getNutritionProgram');

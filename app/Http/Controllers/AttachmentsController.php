@@ -50,15 +50,17 @@ class AttachmentsController extends Controller
     }
 
     public function uploadVideo(Request $request)
-    {
-        $this->validate($request, [
-            'video' => 'required|file',
-            'poster' => 'required|image',
-        ]);
+    {   
+
+        // $this->validate($request, [
+        //     'video' => 'required|file',
+        //     'poster' => 'required|image',
+        // ]);
 
         $video = $request->file('video');
         $videoName = $this->generateFileName($video);
         $videoFilename = $videoName['name'] . '.' . $videoName['ext'];
+
         $pathBase = 'videos/';
         $videoPath = $pathBase . $videoFilename;
 
@@ -186,8 +188,9 @@ class AttachmentsController extends Controller
     public function delete($media, Request $request)
     {
         $media = Attachment::where('id', $media)->with('sizes')->first();
-
+        // dd($media);
         $path = public_path('/uploads/' . $media->path);
+       
         if (File::exists($path)) {
             File::delete($path);
         }

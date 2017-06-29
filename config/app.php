@@ -180,6 +180,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\AuthedUserServiceProvider::class,
+        Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
+        LaravelFCM\FCMServiceProvider::class, 
 
     ],
 
@@ -232,6 +234,9 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
+        'PushNotification' => Davibennun\LaravelPushNotification\Facades\PushNotification::class,
+        'FCM'      => LaravelFCM\Facades\FCM::class,
+    'FCMGroup' => LaravelFCM\Facades\FCMGroup::class, // Optional
     ],
 
 ];

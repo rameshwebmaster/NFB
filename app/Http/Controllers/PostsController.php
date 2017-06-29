@@ -143,8 +143,8 @@ class PostsController extends Controller
     }
 
     public function update($post_type, Post $post, Request $request)
-    {
-
+    {   
+        
         $availableMetas = ['instagram_id', 'country', 'phone_number', 'address', 'website'];
          $validator = Validator::make($request->all(), [
             'title' => 'required',

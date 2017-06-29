@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mail;
 use Redis;
+use Log;
 
 class MessagesController extends Controller
 {
@@ -79,10 +80,13 @@ class MessagesController extends Controller
         }
     }
 
-    private function sendNotification($users, $message)
+    public static function sendNotification($users, $message)
     {
+        
         foreach ($users as $user) {
+
             $message->receivers()->save($user);
+
             if ($user->language == 'ar') {
                 $subject = $message->trans('message_subject');
                 $body = $message->trans('message_body');
@@ -104,6 +108,8 @@ class MessagesController extends Controller
                     ]
                 ];
                 Redis::publish('nfbox:notification', json_encode($notificationData));
+                //Added log for to notification sent
+                Log::info('Notification sent to this user ID->'.$user->id.'User Name' .$user->username.'message id->'.$message->id);
             }
         }
     }

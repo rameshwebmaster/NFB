@@ -48,12 +48,13 @@
                             <?php $programDiseases = explode(',', $program->diseases); ?>
                         @endif
                         @foreach($diseases as $id => $disease)
-                            <div class="checkbox checkbox-info">
-                                <input type="checkbox" value="{{ $id }}" name="disease[]"
+                            <div class="radio radio-info">
+
+                                <input type="radio" value="{{ $id }}" name="disease[]"
                                        id="disease-{{ $id }}"
                                 @if(isset($program) && $programDiseases[$id] == '1')
                                     {{ 'checked' }}
-                                        @endif>
+                                        @endif >
                                 <label for="disease-{{ $id }}">{{ $disease }}</label>
                             </div>
                         @endforeach

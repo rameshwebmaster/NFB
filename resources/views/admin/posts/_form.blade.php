@@ -1,3 +1,10 @@
+@if(session('success'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ session('success') }}
+        </div>
+    @endif
+
 <div class="row">
     <div class="col-md-8">
             
@@ -221,6 +228,13 @@
                 </div>
                 {{--End of Category Section--}}
             </div>
+
+             @if($postType == 'exercises')
+              <p class="text-muted m-b-20">Enter Sort order for video</p>
+                <div class="row">
+                <input name='sort_no' type="text" value="{{ isset($post->sort_no) ? $post->sort_no:''}}" />
+                </div>
+             @endif
         </div>
 
 

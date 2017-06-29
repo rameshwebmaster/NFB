@@ -90,56 +90,7 @@
                     <p class="text-muted m-b-30">Select users to send</p>
                     @include('admin.partials._filter_user')
 
-                    {{--@if(isset($receivingUser))--}}
-                        {{--<span>Send To {{ $receivingUser->username }}</span>--}}
-                        {{--<input type="hidden" name="user" value="{{ $receivingUser->id }}">--}}
-                    {{--@else--}}
-
-                        {{--<div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">--}}
-                            {{--<label for="country">Country</label>--}}
-                            {{--<select class="form-control" name="country" id="country">--}}
-                                {{--<option value="">-- Select a Country --</option>--}}
-                                {{--@foreach($countries as $code => $country)--}}
-                                    {{--<option value="{{ $code }}">{{ $country }}</option>--}}
-                                {{--@endforeach--}}
-                            {{--</select>--}}
-                        {{--</div>--}}
-
-                        {{--<div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">--}}
-                            {{--<label for="gender">Gender</label>--}}
-                            {{--<select class="form-control" name="gender" id="gender">--}}
-                                {{--<option value="">-- Select a Gender --</option>--}}
-                                {{--<option value="1">Male</option>--}}
-                                {{--<option value="2">Female</option>--}}
-                            {{--</select>--}}
-                            {{--@if($errors->has('gender'))--}}
-                                {{--<div class="help-block with-errors">--}}
-                                    {{--<strong>{{ $errors->first('gender') }}</strong>--}}
-                                {{--</div>--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-
-                        {{--<div class="form-group{{ $errors->has('age_from') ? ' has-error' : '' }}">--}}
-                            {{--<label for="age_from">Age From</label>--}}
-                            {{--<input type="text" name="age_from" class="form-control">--}}
-                            {{--@if($errors->has('age_from'))--}}
-                                {{--<div class="help-block with-errors">--}}
-                                    {{--<strong>{{ $errors->first('age_from') }}</strong>--}}
-                                {{--</div>--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-
-                        {{--<div class="form-group{{ $errors->has('age_to') ? ' has-error' : '' }}">--}}
-                            {{--<label for="age_to">Age To</label>--}}
-                            {{--<input type="text" name="age_to" class="form-control">--}}
-                            {{--@if($errors->has('age_to'))--}}
-                                {{--<div class="help-block with-errors">--}}
-                                    {{--<strong>{{ $errors->first('age_to') }}</strong>--}}
-                                {{--</div>--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-
-                    {{--@endif--}}
+                    
 
                 </div>
 

@@ -92,6 +92,17 @@ Route::group(['prefix' => 'nfb-admin'], function () {
     Route::get('/users/{user}/healthStatus', 'UsersController@healthStatus')->name('userHealthStatus');
     Route::get('/users/{user}/referred', 'UsersController@referredByUser')->name('referredByUser');
 
+ //Added for Message Notification to Induvidual user
+Route::post('user/{user}/sendNotification', 'UsersController@sendNotification')->name('sendUserNotification');
+ 
+ 
+    //Added For Big Loosers
+    Route::get('/losers/weight', 'LosersController@weight')->name('weightlosers');
+    Route::get('/losers/waist', 'LosersController@waist')->name('waistlosers');
+    Route::get('/losers/thigh', 'LosersController@thigh')->name('thighlosers');
+
+
+
     Route::get('/categories/{categoryType}', 'CategoriesController@index')->name('categories');
     Route::get('/categories/{categoryType}/create', 'CategoriesController@create')->name('createCategory');
     Route::post('/categories/{categoryType}/create', 'CategoriesController@store');
@@ -151,9 +162,14 @@ Route::group(['prefix' => 'nfb-admin'], function () {
     Route::get('activities', 'ActivitiesController@index')->name('activities');
 
 
+    //Added Route For Transaction
     Route::get('transactions', 'TransactionsController@index')->name('transactions');
     Route::get('transactions/create', 'TransactionsController@create')->name('createTransaction');
     Route::post('transactions/create', 'TransactionsController@store');
+    Route::get('/transactions/{program}/edit', 'TransactionsController@edit')->name('edittransactions');
+    Route::patch('/transactions/{id}', 'TransactionsController@update')->name('transaction');
+    Route::delete('/transactions/{id}', 'TransactionsController@delete')->name('deletetransaction');
+   
     Route::get('report', 'TransactionsController@report')->name('reportTransaction');
 
 

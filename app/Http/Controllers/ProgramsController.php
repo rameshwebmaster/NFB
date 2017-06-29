@@ -60,6 +60,8 @@ class ProgramsController extends Controller
         ]);
 
         $data = $request->all();
+       
+         
         $data['interval_type'] = 'week';
         $data['interval_count'] = 2;
         $data['author'] = Auth::user();
@@ -68,6 +70,7 @@ class ProgramsController extends Controller
             $data['diseases'] = '0,0,0,0,0';
         } else {
             $data['diseases'] = HealthStatus::getDiseaseString($data['disease']);
+
         }
 
         //if program type is RAMADAN_NU then it will add for ramadan table

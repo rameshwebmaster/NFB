@@ -32,8 +32,9 @@
             <div class="white-box">
                 <h3 class="box-title m-b-20">Questions</h3>
                 <div class="chat-box">
-                    <div class="slimScrollDiv">
-                        <ul class="chat-list slimscroll">
+                    <div class="slimScrollDiv" style="max-height: 150px;
+    overflow-y: scroll;">
+                        <ul class="chat-list slimscroll" >
                         </ul>
                     </div>
                 </div>
@@ -80,6 +81,7 @@
         });
 
         startStream.addEventListener('click', function () {
+            $("#live-stream-status").html("<i class='fa fa-circle text-success'> Online</i>");
             console.log('clicked started');
             var data = new FormData();
             data.append('_token', token);
@@ -134,6 +136,7 @@
 
         endStream.addEventListener('click', function () {
             console.log('clicked ended');
+            $("#live-stream-status").html("<i class='fa fa-circle text-error'> Offline</i>");
             if (streamId == 0) {
                 console.log('something went wrong');
                 return;

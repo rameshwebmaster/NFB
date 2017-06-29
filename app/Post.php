@@ -12,7 +12,7 @@ class Post extends Model
     use SoftDeletes;
     use Metable, Translatable;
 
-    protected $fillable = ['title', 'body', 'excerpt', 'format', 'status', 'access', 'author', 'type'];
+    protected $fillable = ['title', 'body', 'excerpt', 'format', 'status', 'access', 'author', 'type','sort_no'];
 
     protected $dates = ['deleted_at'];
 

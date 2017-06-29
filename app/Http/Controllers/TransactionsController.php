@@ -49,7 +49,35 @@ class TransactionsController extends Controller
             $transaction = Transaction::create($data);
         });
 
-        return redirect()->route('transactions');
+        return redirect()->route('transactions')->with('success', 'Transaction created successfully');
+    }
+
+    public function edit(Transaction $program)
+    {
+
+       $isEdit = true;
+        return view('admin.transactions.edit', compact('program', 'isEdit'));
+    }
+
+    public function update(Transaction $id, Request $request)
+    {
+        $this->validate($request, [
+            'amount' => 'required|numeric',
+            'type' => 'required|in:income,expense',
+        ]);
+
+       $data = $request->all();
+      
+       $id->update($data);
+       
+        return redirect()->route('transactions')->with('success', 'Transaction Guide Updated successfully');
+    }
+
+    
+    public function delete(Transaction $id)
+    {  
+        $id->delete();
+        return back()->with('success', 'Transaction Guide Deleted Successfully');
     }
 
     public function report()
