@@ -15,7 +15,8 @@
 @section('page-title')
     <div class="col-xs-12">
         <h4 class="page-title">
-            Create a Recipe
+          Edit a {{ studly_case(str_singular($postType)) }}
+        
         </h4>
     </div>
 @endsection

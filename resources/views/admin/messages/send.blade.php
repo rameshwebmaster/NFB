@@ -8,8 +8,16 @@
     </div>
 @endsection
 
+
+
 @section('content')
 
+@if(session('success'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ session('success') }}
+        </div>
+    @endif
     <form action="{{ route('message', ['messageType' => $messageType]) }}" method="post">
 
         {{ csrf_field() }}

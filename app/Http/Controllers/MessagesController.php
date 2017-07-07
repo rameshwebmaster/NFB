@@ -94,23 +94,25 @@ class MessagesController extends Controller
                 $subject = $message->subject;
                 $body = $message->body;
             }
-            if ($user->hasLoggedIn()) {
-                \Log::info("id : " . $user->id);
-                $notificationData = [
-                    'user' => [
-                        'username' => $user->username,
-                        'platform' => $user->lastLogin()->platform,
-                        'deviceToken' => $user->lastLogin()->token,
-                    ],
-                    'payload' => [
-                        'subject' => $subject,
-                        'body' => $body,
-                    ]
-                ];
-                Redis::publish('nfbox:notification', json_encode($notificationData));
-                //Added log for to notification sent
-                Log::info('Notification sent to this user ID->'.$user->id.'User Name' .$user->username.'message id->'.$message->id);
-            }
+
+            UsersController::pushNotification($user,$message);
+            // if ($user->hasLoggedIn()) {
+            //     \Log::info("id : " . $user->id);
+            //     $notificationData = [
+            //         'user' => [
+            //             'username' => $user->username,
+            //             'platform' => $user->lastLogin()->platform,
+            //             'deviceToken' => $user->lastLogin()->token,
+            //         ],
+            //         'payload' => [
+            //             'subject' => $subject,
+            //             'body' => $body,
+            //         ]
+            //     ];
+            //     Redis::publish('nfbox:notification', json_encode($notificationData));
+            //     //Added log for to notification sent
+            //     Log::info('Notification sent to this user ID->'.$user->id.'User Name' .$user->username.'message id->'.$message->id);
+            // }
         }
     }
 

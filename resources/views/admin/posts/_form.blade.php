@@ -75,7 +75,7 @@
                 <div class="form-group">
                     <label for="arabic_body">Body</label>
                     <textarea name="arabic_body" id="arabic_body" placeholder="Enter the post body"
-                              class="form-control">{{ $isEdit ? $post->trans('post_body') : old('arabic_body') }}</textarea>
+                              class="form-control input-rtl">{{ $isEdit ? $post->trans('post_body') : old('arabic_body') }}</textarea>
                 </div>
                 {{--End of Body Field--}}
             @endif
@@ -86,7 +86,7 @@
                 <div class="form-group">
                     <label for="arabic_excerpt">Excerpt</label>
                     <textarea name="arabic_excerpt" id="arabic_excerpt" placeholder="Enter the post excerpt"
-                              class="form-control">{{ $isEdit ? $post->trans('post_excerpt') : old('arabic_excerpt') }}</textarea>
+                              class="form-control input-rtl">{{ $isEdit ? $post->trans('post_excerpt') : old('arabic_excerpt') }}</textarea>
                 </div>
                 {{--End of Excerpt Field--}}
             @endif
@@ -148,14 +148,25 @@
                         {{--Format Field--}}
                         <div class="form-group">
                             <label>Format</label>
+                            <?php
+                            if($post->format !== null && $post->format == 'video'){
+                                $class_outline_stnd ="btn-outline";
+                                $class_outline_video ="";
+                            }else{
+                                $class_outline_stnd ="btn-outline";
+                                $class_outline_video ="";
+                            }
+                                
+                             
+                            ?>
                             <div class="btn-group btn-group-justified format-btn-group">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-primary standard-format"
+                                    <button type="button" class="btn btn-primary standard-format <?php echo $class_outline_stnd;?>"
                                             data-format="standard">Standard
                                     </button>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-primary btn-outline video-format"
+                                    <button type="button" class="btn btn-primary  video-format <?php echo $class_outline_video;?>"
                                             data-format="video">Video
                                     </button>
                                 </div>
@@ -273,7 +284,13 @@
                             @if(isset($isEdit))
                             @if($isEdit)
                                         
-                                        {{ 'src=' . ($post->mainAttachment->isEmpty() ? '' :  '/uploads/' . isset($post->mainAttachment[0]->squareSmall->path) ? $post->mainAttachment[0]->squareSmall->path : '' ) }}
+                                        <?php if( isset($post->mainAttachment) && $post->mainAttachment[0]->squareSmall->path !=''){
+                                    ?>
+                                  src = "{{ url('/uploads/'.$post->mainAttachment[0]->squareSmall->path)}} ";
+  
+                                  <?php }?>
+                                  
+                                      <!--   {{ 'src=' . ($post->mainAttachment->isEmpty() ? '' :  '/uploads/' . isset($post->mainAttachment[0]->squareSmall->path) ? $post->mainAttachment[0]->squareSmall->path : '' ) }} -->
                                     @endif @endif>
                         </div>
                     </div>

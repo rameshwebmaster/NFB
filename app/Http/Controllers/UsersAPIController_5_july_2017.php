@@ -74,9 +74,7 @@ class UsersAPIController extends Controller
             'instagram_id' => isset($metas['instagram_id']) ? $metas['instagram_id']->value : null,
             'phone_number' => isset($metas['phone_number']) ? $metas['phone_number']->value : null,
             'doctor_name' =>'Dr. Abdullah Al-Mutawa',
-            'doctor_name_arabic' =>'د. عبدالله المطوع',
             'trainer_name'=>'Viktoriia Dudko',
-            'trainer_name_arabic'=>'فيكتوريا  دودكو',
             'user_exercise_level'  => isset($metas['user_exercise_level']) ? $metas['user_exercise_level']->value : null,
             'hasUpdatedInfo' => false,
             'weight_chart' => [],
@@ -183,7 +181,6 @@ class UsersAPIController extends Controller
         $history = $user->healthHistory($stat);
         $history->each(function ($status) {
             $status->update_time = $status->created_at->format('d M');
-            $status->update_date_format = $status->created_at->format('Y-m-d');
         });
         return response()->json($history);
     }
@@ -198,14 +195,8 @@ class UsersAPIController extends Controller
             ->withPivot('sent_at', 'read')
             ->paginate(10);
         $messages->each(function ($message) {
-            $message->date_format = '';
             $message->read = $message->pivot->read;
             $message->sent_at = Carbon::createFromFormat('Y-m-d H:i:s', $message->pivot->sent_at)->format('d M Y');
-
-            //Carbon::createFromFormat('d/m/Y', $value)->toDateString();
-
-            $message->date_format = Carbon::createFromFormat('Y-m-d H:i:s', $message->pivot->sent_at)->toDateString();
-
             $message->addTranslationItem('message_subject', ($message->trans('message_subject') !== null) ? $message->trans('message_subject') : ""); //$message->addTranslationItem('message_subject', $message->trans('message_subject') ?? "");
             $message->addTranslationItem('message_body', ($message->trans('message_body') !== null) ? $message->trans('message_body') : ""); //$message->addTranslationItem('message_body', $message->trans('message_body') ?? "");
         });
@@ -226,12 +217,9 @@ class UsersAPIController extends Controller
 
     public function updatePassword(Request $request)
     {
-
         $this->validate($request, [
-            'new' => 'required',
-            'current_password' =>'required',
+            'new' => 'required'
         ]);
-         dd($request->all()); 
         $user = JWTAuth::toUser();
         $data = $request->only('new');
         $user->password = Hash::make($data['new']);
@@ -250,7 +238,7 @@ class UsersAPIController extends Controller
             'birth_date'=>'required',
             'password'=>'required',
             'platform'=>'required',
-            'phone_number'=>'required'
+	   'phone_number'=>'required',
 
         ]);
 
@@ -397,7 +385,5 @@ class UsersAPIController extends Controller
         $data['user_bim_index'] = $user->metaFor('user_bim_index');
        return response()->json($data);
     }
-
-   
 
 }

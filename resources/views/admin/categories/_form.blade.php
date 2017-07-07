@@ -22,7 +22,7 @@
 
                     <div class="form-group {{ $errors->has('arabic_title') ? 'has-error' : '' }}">
                         <label class="control-label" for="arabic_title">Arabic Title</label>
-                        <input type="text" name="arabic_title" class="form-control" placeholder="Arabic Title"
+                        <input type="text" name="arabic_title" class="form-control input-rtl" placeholder="Arabic Title"
                                value="{{ isset($category) ? $category->trans('category_title') : old('arabic_title') }}">
                         @if($errors->has('arabic_title'))
                             <div class="help-block with-errors">
@@ -55,7 +55,7 @@
                         <label class="control-label" for="arabic_description">Arabic Description</label>
                         <textarea name="arabic_description" id="arabic_description"
                                   rows="10"
-                                  class="form-control">{{ isset($category) ? $category->trans('category_description') : old('arabic_description') }}</textarea>
+                                  class="form-control input-rtl">{{ isset($category) ? $category->trans('category_description') : old('arabic_description') }}</textarea>
                         @if($errors->has('arabic_description'))
                             <div class="help-block with-errors">
                                 <strong>{{ $errors->first('arabic_description') }}</strong>

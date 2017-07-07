@@ -291,7 +291,7 @@ class UsersController extends Controller
         $messageData['author'] = \Auth::user()->id;
         $message = Message::create($messageData);
         
-
+        $message->receivers()->save($user);
         $message->addOrUpdateTranslation('message_subject', $messageData['arabic_subject']);
         $message->addOrUpdateTranslation('message_body', $messageData['arabic_body']);
 

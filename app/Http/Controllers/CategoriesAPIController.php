@@ -40,7 +40,7 @@ class CategoriesAPIController extends Controller
 
        
      
-        $cats = Category::where('type', $this->categoryType)->orderBy('order', 'desc')->get(['id', 'title', 'type', 'description']);
+        $cats = Category::where('type', $this->categoryType)->orderBy('order', 'asc')->get(['id', 'title', 'type', 'description']);
       // $cats->sub = null;
         foreach($cats as $cat) {
 //            dd($cat);
