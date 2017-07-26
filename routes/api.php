@@ -56,5 +56,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/getNutritionGuide', 'NutritionGuideAPIController@index');    
 
     //Added for get CV Data    
-    Route::get('/getCV', 'CVAPIController@index');    
+    Route::get('/getCV', 'CVAPIController@index');   
+
+    //Added new web service for register web service
+    Route::post('/user/subscriptionNew', 'UsersAPIController@SubscriptionNew'); 
+    Route::get('/user/getsubscriptionNew', 'UsersAPIController@getSubscriptionNew'); 
 });

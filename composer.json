@@ -13,6 +13,8 @@
         "consoletvs/charts": "3.*",
         "davibennun/laravel-push-notification": "dev-laravel5",
         "brozot/laravel-fcm": "1.2.*"
+        
+
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -63,6 +63,12 @@ Route::get('/nfb-notifier', function () {
     return view('admin.test.notification');
 });
 
+Route::get('/checkAndroid', 'SubscriptionCheckController@checkAndroid');
+Route::get('/checkIOS', 'SubscriptionCheckController@checkIOS');
+Route::get('/checkCron', 'SubscriptionCheckController@cronIOSValidator');
+
+
+
 //Route::get('del', function () {
 //    $path = public_path('/uploads/72822.png');
 //    File::delete($path);

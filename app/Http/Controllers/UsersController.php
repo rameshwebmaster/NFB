@@ -23,6 +23,7 @@ use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
+use Log;
 
 
 class UsersController extends Controller
@@ -292,6 +293,7 @@ class UsersController extends Controller
         $message = Message::create($messageData);
         
         $message->receivers()->save($user);
+
         $message->addOrUpdateTranslation('message_subject', $messageData['arabic_subject']);
         $message->addOrUpdateTranslation('message_body', $messageData['arabic_body']);
 
@@ -304,98 +306,118 @@ class UsersController extends Controller
     }
 
     public static function pushNotification($user ,$data){
-
        
-
-           $deviceToken = $user->lastLogin()->token;
-           $deviceType = $user->lastLogin()->platform;
- 
-           if ($user->language == 'ar') {
+       
+        if($user->language == 'ar') {
                 $subject = $data->trans('message_subject');
                 $body = $data->trans('message_body');
-            } else {
+        }else{
                 $subject = $data->subject;
                 $body = $data->body;
-            }
-        
-    
-        if($deviceType=='ios'){
-
-
-            // Put your device token here (without spaces):
-            $deviceToken = $deviceToken;
-
-            // Put your private key's passphrase here:
-            $passphrase = '';
-
-            // Put your alert message here:
-            
-             $ctx = stream_context_create();
-            stream_context_set_option($ctx, 'ssl', 'local_cert',  base_path('public/uploads/Production_Certificates.pem'));
-            stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
-            stream_context_set_option($ctx, 'ssl', 'cafile',base_path('public/uploads/entrust_2048_ca.cer'));
-
-            // Open a connection to the APNS server
-            $fp = stream_socket_client('ssl://gateway.push.apple.com:2195', $err,
-                $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
-
-            if (!$fp)
-                exit("Failed to connect: $err $errstr" . PHP_EOL);
-
-
-
-            // Create the payload body
-            $body1['aps'] = array(
-                'alert' => $body,
-                'sound' => 'default',
-                );
-          
-
-            // Encode the payload as JSON
-            $payload = json_encode($body1);
-
-            // print_r($payload);
-
-
-            // Build the binary notification
-            $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
-
-            // Send it to the server
-            $result = fwrite($fp, $msg, strlen($msg));
-
-            /*if (!$result)
-                echo 'Message not delivered' . PHP_EOL;
-            else
-                echo 'Message successfully delivered' . PHP_EOL;
-            */
-            // Close the connection to the server
-            fclose($fp);
-
-
-        }elseif($deviceType=='android'){
-            $appName = 'android';
-           //if($deviceToken){
-            
-            $optionBuiler = new OptionsBuilder();
-            $optionBuiler->setTimeToLive(60*20);
-
-            $notificationBuilder = new PayloadNotificationBuilder('NFBox');
-            $notificationBuilder->setBody($subject)->setSound('default');
-
-            $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['subject'=>$subject,'body' => $body]);
-
-            $option = $optionBuiler->build();
-
-            $notification = $notificationBuilder->build();
-
-            $data = $dataBuilder->build();
-             
-            $downstreamResponse =  \FCM::sendTo($deviceToken, $option, $notification, $data);
-           
-            return $downstreamResponse;
-        }else{
-            return false;
         }
+
+        // Fetch latest device token id 
+         $allLogin = $user->allLogin()->toArray();
+       
+        if(empty($allLogin)){
+            Log::info('NOt Single Device Login found this #user Id->'.$user->id);
+            return false;  
+        }
+        
+        foreach($allLogin as $login => $loginvalue){
+             
+            if(empty($loginvalue['token'])){
+                
+                Log::info('Device Token not found this #user ID->'.$user->id.'#User Name->' .$user->username);
+                return false;
+            }
+              
+            $deviceToken = $loginvalue['token'];
+            $deviceType = $loginvalue['platform'];
+
+               if($deviceType=='ios'){
+
+             // Put your device token here (without spaces):
+              //  $deviceToken = $deviceToken;
+
+                // Put your private key's passphrase here:
+                $passphrase = '';
+
+                // Put your alert message here:
+                
+                 $ctx = stream_context_create();
+                stream_context_set_option($ctx, 'ssl', 'local_cert',  base_path('public/uploads/Production_Certificates.pem'));
+                stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
+                stream_context_set_option($ctx, 'ssl', 'cafile',base_path('public/uploads/entrust_2048_ca.cer'));
+
+                // Open a connection to the APNS server
+                $fp = stream_socket_client('ssl://gateway.push.apple.com:2195', $err,
+                    $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+
+                if (!$fp)
+                    exit("Failed to connect: $err $errstr" . PHP_EOL);
+
+
+
+                // Create the payload body
+                $body1['aps'] = array(
+                    'alert' => $body,
+                    'sound' => 'default',
+                    );
+              
+
+                // Encode the payload as JSON
+                $payload = json_encode($body1);
+
+                // print_r($payload);
+
+
+                // Build the binary notification
+                $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
+
+                // Send it to the server
+                $result = fwrite($fp, $msg, strlen($msg));
+
+                if(!$result){
+                      Log::info('Notification sent to this #user ID->'.$user->id.'#User Name->' .$user->username.'#deviceType->'.$deviceType.'#deviceToken->'.$deviceToken);
+                }else{
+                    Log::info('Notification failed to send this #user ID->'.$user->id.'#User Name->' .$user->username.'#deviceType->'.$deviceType.'#deviceToken->'.$deviceToken);
+                    }
+                // Close the connection to the server
+                fclose($fp);
+
+
+                }elseif($deviceType=='android'){
+                $appName = 'android';
+               //if($deviceToken){
+                
+                $optionBuiler = new OptionsBuilder();
+                $optionBuiler->setTimeToLive(60*20);
+
+                $notificationBuilder = new PayloadNotificationBuilder('NFBox');
+                $notificationBuilder->setBody($subject)->setSound('default');
+
+                $dataBuilder = new PayloadDataBuilder();
+                $dataBuilder->addData(['subject'=>$subject,'body' => $body]);
+
+                $option = $optionBuiler->build();
+
+                $notification = $notificationBuilder->build();
+
+                $data = $dataBuilder->build();
+                 
+                $downstreamResponse =  \FCM::sendTo($deviceToken, $option, $notification, $data);
+                if($downstreamResponse->numberSuccess()){
+                Log::info('Notification sent to this #user ID->'.$user->id.'#User Name->' .$user->username.'#deviceType->'.$deviceType.'#deviceToken->'.$deviceToken);
+                }else{
+                Log::info('Notification failed to send this #user ID->'.$user->id.'#User Name->' .$user->username.'#deviceType->'.$deviceType.'#deviceToken->'.$deviceToken);
+                }
+              
+            }
+
+           
+        }
+ return true;
     }
+
 }

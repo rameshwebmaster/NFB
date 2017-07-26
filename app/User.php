@@ -162,4 +162,9 @@ class User extends Authenticatable
     {
         return $this->lastLogin() ? true : false;
     }
+
+    public function allLogin()
+    {
+        return $this->logins()->latest()->take('5')->get();
+    }
 }

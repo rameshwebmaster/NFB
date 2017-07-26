@@ -82,18 +82,18 @@ class MessagesController extends Controller
 
     public static function sendNotification($users, $message)
     {
-        
+      
         foreach ($users as $user) {
 
             $message->receivers()->save($user);
 
-            if ($user->language == 'ar') {
-                $subject = $message->trans('message_subject');
-                $body = $message->trans('message_body');
-            } else {
-                $subject = $message->subject;
-                $body = $message->body;
-            }
+            // if ($user->language == 'ar') {
+            //     $subject = $message->trans('message_subject');
+            //     $body = $message->trans('message_body');
+            // } else {
+            //     $subject = $message->subject;
+            //     $body = $message->body;
+            // }
 
             UsersController::pushNotification($user,$message);
             // if ($user->hasLoggedIn()) {

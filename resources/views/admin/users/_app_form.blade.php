@@ -226,11 +226,12 @@
 
                     <div class="form-group">
                         <label for="language">Language <span class="text-danger">*</span></label>
+                    
                         <?php $languages = ['ar' => 'Arabic', 'en' => 'English'] ?>
                         <select name="language" id="language" class="form-control">
                             @foreach($languages as $languageCode => $language)
                                 <option value="{{ $languageCode }}"
-                                @if(isset($user) && $user->$language == $languageCode)
+                                @if(isset($user) && $user->language == $languageCode)
                                     {{ 'selected' }}
                                         @endif
                                 >{{ $language }}</option>

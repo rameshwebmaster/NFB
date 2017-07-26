@@ -229,9 +229,9 @@ class UsersAPIController extends Controller
 
         $this->validate($request, [
             'new' => 'required',
-            'current_password' =>'required',
+       
         ]);
-         dd($request->all()); 
+      
         $user = JWTAuth::toUser();
         $data = $request->only('new');
         $user->password = Hash::make($data['new']);
@@ -241,6 +241,8 @@ class UsersAPIController extends Controller
 
     public function register(Request $request)
     {
+        
+
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users,username',
             'email' => 'required|unique:users,email',
@@ -250,9 +252,10 @@ class UsersAPIController extends Controller
             'birth_date'=>'required',
             'password'=>'required',
             'platform'=>'required',
-            'phone_number'=>'required'
+            'phone_number'=>'required',
 
         ]);
+
 
         //Check whether validation is failed or passed
         if($validator->fails()){
@@ -260,13 +263,16 @@ class UsersAPIController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
+
         $data = $request->except(['avatar']);
         $data['role'] = 'consumer';
         if ($request->hasFile('avatar')) {
             $data['avatar'] = $this->saveAvatar($request->file('avatar'));
         }
         $data['password'] = bcrypt($data['password']);
-//        $data['birth_date'] = $this->formatDate($data['birth_date']);
+        $data['language'] = ($request->language == 'Arabic') ? 'ar':'en';
+       // $data['birth_date'] = $this->formatDate($data['birth_date']);
+        
         $user = User::create($data);
 //        $data['start_date'] = $this->formatDate($data['start_date']);
 //        $data['expiry_date'] = $this->formatDate($data['expiry_date']);
@@ -283,7 +289,16 @@ class UsersAPIController extends Controller
         $user->addOrUpdateMeta('user_exercise_count', 1);
         $user->addOrUpdateMeta('user_exercise_level', 1);
         $user->addOrUpdateMeta('user_nutrition_level', 1);
+        
+        if (!empty($data['referrer_user'])) {
+             $seller_user = User::select('id')->where('role', 'seller')->where('username',$data['referrer_user'])->first();
 
+             if(!empty($seller_user->id)){
+                $user->addOrUpdateMeta('referrer', $seller_user->id);    
+             }
+            
+        }
+        
         $credentials = $request->only('username', 'password');
         $credentials['role'] = 'consumer';
         try {
@@ -295,8 +310,6 @@ class UsersAPIController extends Controller
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
-        $login = new Login(['platform' => $request->get('platform'), 'token' => $request->get('device_token')]);
-        $user->logins()->save($login);
 
         //return response()->json(compact('token'));
         return ['success' => 'user_created_successfully','token'=>$token];
@@ -349,7 +362,12 @@ class UsersAPIController extends Controller
     
         $data['user_id'] = $user->id;
         $data['type']=$request->type;
-        $data['receipt']=$request->receipt;
+        $RECEIPT = base64_decode($request->receipt);
+            
+        $receipt_data = json_decode($RECEIPT,true);
+       
+        $data['receipt'] = $receipt_data['latest_receipt'];
+       
         $data['purchase_id']=$request->purchase_id;
         $data['start_date'] = date("Y-m-d H:i:s",strtotime($request->start_date));
         $data['expiry_date'] = date("Y-m-d H:i:s",strtotime($request->expiry_date));
@@ -370,6 +388,50 @@ class UsersAPIController extends Controller
         return ['success' => 'user_subscribed_successfully']; 
     }
 
+    public function SubscriptionNew(Request $request){
+         Log::info('Request: ' . $request);
+         $validator = Validator::make($request->all(), [
+            // 'user_id' => 'required',
+            'start_date' => 'required',
+            'expiry_date' => 'required',
+            'type' => 'required',
+            'status'=>'required',   
+            //'receipt' => 'required',
+            //'purchase_id'=>'required',
+        ]);
+    
+        $user = JWTAuth::toUser(); 
+          //Check whether validation is failed or passed
+        if($validator->fails()){
+            //Redirect back with validation errors
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        $data['user_id'] = $user->id;
+        $data['type']=strtolower($request->type);
+
+        $data['receipt']=$request->receipt;
+        $data['purchase_id']=$request->purchase_id;
+        $data['start_date'] = date("Y-m-d H:i:s",strtotime($request->start_date));
+        $data['expiry_date'] = date("Y-m-d H:i:s",strtotime($request->expiry_date));
+        $data['status'] = $request->status;
+        
+       
+        $sub_id_db = Subscription::select('id')->where('user_id', $user->id)->first();
+   
+        if(isset($sub_id_db->id)){
+
+           $user->subscription()->update($data);
+         
+        }else{
+             $subscription = new Subscription($data);
+            $user->subscription()->save($subscription);
+         
+        }
+       
+        return ['stauts' => 'true']; 
+    }
+
     public function getAllDoctors(Request $request){
         $role = "Doctor";
         $user = JWTAuth::toUser();
@@ -382,6 +444,14 @@ class UsersAPIController extends Controller
         $user = JWTAuth::toUser();
 
         $subs_user_id =Subscription::select('type','start_date','expiry_date')->where('user_id',$user->id)->first();
+        //dd($subs_user_id);
+         return response()->json($subs_user_id);
+    }
+
+    public function getSubscriptionNew(Request $request){
+        $user = JWTAuth::toUser();
+
+        $subs_user_id =Subscription::select('type','status')->where('user_id',$user->id)->first();
         //dd($subs_user_id);
          return response()->json($subs_user_id);
     }
