@@ -284,7 +284,7 @@
                             @if(isset($isEdit))
                             @if($isEdit)
                                         
-                                        <?php if( isset($post->mainAttachment) && $post->mainAttachment[0]->squareSmall->path !=''){
+                                        <?php if( isset($post->mainAttachment) && !empty($post->mainAttachment[0]->squareSmall->path) ){
                                     ?>
                                   src = "{{ url('/uploads/'.$post->mainAttachment[0]->squareSmall->path)}} ";
   

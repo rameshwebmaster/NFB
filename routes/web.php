@@ -65,7 +65,7 @@ Route::get('/nfb-notifier', function () {
 
 Route::get('/checkAndroid', 'SubscriptionCheckController@checkAndroid');
 Route::get('/checkIOS', 'SubscriptionCheckController@checkIOS');
-Route::get('/checkCron', 'SubscriptionCheckController@cronIOSValidator');
+Route::get('/checkCron', 'SubscriptionCheckController@cronSubscriptionValidator');
 
 
 

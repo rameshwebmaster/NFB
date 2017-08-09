@@ -30,6 +30,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             \Log::info('This is a test');
         })->everyFiveMinutes();
+
+        $schedule->call('App\Http\Controllers\SubscriptionCheckController@cronSubscriptionValidator')
+                ->everyFiveMinutes();
     }
 
     /**

@@ -9,9 +9,7 @@ use Log;
 class SubscriptionCheckController extends Controller
 {
     
-        
-
-    public function cronIOSValidator(){
+     public static function cronSubscriptionValidator(){
 
         $now = new \DateTime();
         $current_datetime = $now->format('Y-m-d H:i:s');

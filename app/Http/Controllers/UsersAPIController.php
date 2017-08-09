@@ -453,7 +453,13 @@ class UsersAPIController extends Controller
 
         $subs_user_id =Subscription::select('type','status')->where('user_id',$user->id)->first();
         //dd($subs_user_id);
-         return response()->json($subs_user_id);
+        if(empty($subs_user_id)){
+           return response()->json['type' =>$user->subscription_type,'status'=>'Inactive' ]); 
+
+        }else{
+            return response()->json($subs_user_id);
+        
+        }
     }
 
     public function AllStatus(Request $request){
