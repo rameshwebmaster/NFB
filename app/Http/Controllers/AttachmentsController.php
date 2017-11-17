@@ -36,6 +36,7 @@ class AttachmentsController extends Controller
 
     public function index(Request $request)
     {
+       // dd($request->all());
         $type = ($request->get('type') !== null) ? $request->get('type') : 'video'; //$request->get('type') ?? 'video';
         if (!in_array($type, ['video', 'thumbnail', 'external_youtube'])) {
             $type = 'video';
@@ -51,7 +52,7 @@ class AttachmentsController extends Controller
 
     public function uploadVideo(Request $request)
     {   
-
+       // dd($request->all());
         // $this->validate($request, [
         //     'video' => 'required|file',
         //     'poster' => 'required|image',

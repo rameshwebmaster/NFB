@@ -69,7 +69,7 @@ class PostsAPIController extends Controller
         }
         //orderby('sort_no','ASC')
         if ($post_type == 'exercise') {
-            $query->oldest();
+            $query->orderby('sort_no','ASC');
         } else {
             $query->latest();
         }

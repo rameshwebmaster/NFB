@@ -49,7 +49,10 @@ class UsersAPIController extends Controller
         }
         $user = User::where('username', $credentials['username'])->first();
         $now = Carbon::now();
-        // if ($user->subscription->start_date->gt($now) || $user->subscription->expiry_date->lt($now)) {
+
+        // if(empty($user->subscription)){
+        //    return response()->json(['error' => 'login_not_possible'], 402);
+        // }elseif ($user->subscription->start_date->gt($now) || $user->subscription->expiry_date->lt($now)) {
         //     return response()->json(['error' => 'login_not_possible'], 402);
         // }
         $login = new Login(['platform' => $request->get('platform'), 'token' => $request->get('device_token')]);
@@ -454,7 +457,8 @@ class UsersAPIController extends Controller
         $subs_user_id =Subscription::select('type','status')->where('user_id',$user->id)->first();
         //dd($subs_user_id);
         if(empty($subs_user_id)){
-           return response()->json['type' =>$user->subscription_type,'status'=>'Inactive' ]); 
+
+           return response()->json(['type' =>$user->subscription_type,'status'=>'Inactive' ]); 
 
         }else{
             return response()->json($subs_user_id);

@@ -9,15 +9,15 @@ use Log;
 class SubscriptionCheckController extends Controller
 {
     
-     public static function cronSubscriptionValidator(){
+     public function cronSubscriptionValidator(){
 
         $now = new \DateTime();
         $current_datetime = $now->format('Y-m-d H:i:s');
 
         //'expiry_date','<=',$current_datetime
-        $sub_id_db = Subscription::where('user_id','181')->get()->toArray();
+        $sub_id_db = Subscription::where('id','35')->get()->toArray();
         
-        dd($sub_id_db);
+        //dd($sub_id_db);
 
             if(empty($sub_id_db)){
                     Log::info('NO user Found in Cron to Check subscription' );
@@ -68,6 +68,7 @@ class SubscriptionCheckController extends Controller
 
                     if($device_type == 'ios'){
                         //call to Ios fucntion
+
                         $this->getIosSubscription($uservalue);
 
                     }else{
@@ -84,60 +85,39 @@ class SubscriptionCheckController extends Controller
      }
 
 
-     public static function getIosSubscription($uservalue){
+     public  function getIosSubscription($uservalue){
 
                     $now = new \DateTime();
                     $current_datetime = $now->format('Y-m-d H:i:s');
    
-
-                     ob_start(); //Turning ON Output Buffering
-
-                     $PASSWORD = '997ec3808bd34f14890506f7008ddc93';
-                    
-                     $url = "https://sandbox.itunes.apple.com/verifyReceipt/";
-                    //dd($sub_id_db);
-                    // if ($sandbox_receipt) {
-                    //     $url = "https://sandbox.itunes.apple.com/verifyReceipt/";
-                    // }
-                    // else{
-                    //     $url = "https://buy.itunes.apple.com/verifyReceipt";
-                    // }
-
                     $RECEIPT = $uservalue['receipt'];
                     
+                   
+
                     if(!empty($RECEIPT)){
 
-                            $ch = curl_init($url);
-                            $data_string = json_encode(array(
-                                'receipt-data' => $RECEIPT,
-                                'password'     => $PASSWORD,
-                            ));
-                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                                'Content-Type: application/json',
-                                'Content-Length: ' . strlen($data_string))
-                            );
-                            $output   = curl_exec($ch);
-                            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                            ob_flush();//Flush the data here  
-                            curl_close($ch);
-                            unset($ch);
-                           
+                            $output = $this->ValidateAppleReceipt($RECEIPT,'production');
+                              
+                            if($output){
 
-                            if (200 != $httpCode) {
-                                Log::info("Apple Server Response Issue: Error validating App Store transaction receipt. Response HTTP code $httpCode");
-                            }
-                                
-                            $decoded = json_decode($output, TRUE);
+                              $decoded = json_decode($output, TRUE);
                    
-                            //  dd($decoded);  
+                            
                             //receipt Status if 0 =>correct validated else not validated
-                             $status_code = $decoded['status'];
+                              $status_code = $decoded['status'];
+                            }    
+                            
 
+                            if($status_code == 21007){
+                            
+                              $output = $this->ValidateAppleReceipt($RECEIPT,'sandbox');
 
-                             /* error log
+                              $decoded = json_decode($output, TRUE);
+                            
+                              $status_code = $decoded['status'];
+                            }
+
+                            /* error log
                             21000   The App Store could not read the JSON object you provided.
                             21002   The data in the receipt-data property was malformed.
                             21003   The receipt could not be authenticated.
@@ -151,8 +131,7 @@ class SubscriptionCheckController extends Controller
                         if($status_code != 0){
                               Log::info('IOS APP Purchase Error: ' . $output);
                         }else{
-                        
-
+                          
                             $latest_receipt = $decoded['latest_receipt'];  
 
                         
@@ -161,7 +140,7 @@ class SubscriptionCheckController extends Controller
                              $recipt_array = $decoded['latest_receipt_info'];
 
                             $reverse_Array = end($recipt_array); 
-                           // dd($reverse_Array);
+                          
                             //Check for cancellation_date if user cancel's subscription
                             if(!empty($reverse_Array['cancellation_date'])){
                                  Log::info('IOS APP Subscription Cancel: ' . $reverse_Array['cancellation_date']);
@@ -258,4 +237,54 @@ class SubscriptionCheckController extends Controller
             }
 
         }
+
+
+        public static function ValidateAppleReceipt($RECEIPT,$type){
+                 
+                ob_start(); //Turning ON Output Buffering
+
+                $PASSWORD = '997ec3808bd34f14890506f7008ddc93';
+                    
+               // $url = "https://sandbox.itunes.apple.com/verifyReceipt/";
+                    //dd($sub_id_db);
+                    
+
+                if ($type == 'sandbox') {
+                    $url = "https://sandbox.itunes.apple.com/verifyReceipt/";
+                }
+                else{
+                  $url = "https://buy.itunes.apple.com/verifyReceipt";
+                }
+
+                ob_start();
+                
+                $ch = curl_init($url);
+                $data_string = json_encode(array(
+                    'receipt-data' => $RECEIPT,
+                    'password'     => $PASSWORD,
+                ));
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                $output   = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                ob_flush();//Flush the data here  
+                curl_close($ch);
+                unset($ch);
+              
+
+                if (200 != $httpCode) {
+                    Log::info("Apple Server Response Issue: Error validating App Store transaction receipt. Response HTTP code $httpCode");
+                    return false;
+                }
+
+                return $output;
+
+        }
+
+
 }
